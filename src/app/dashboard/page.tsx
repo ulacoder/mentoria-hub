@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -19,80 +19,69 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { StreakWidget } from "@/components/streak-widget";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/contexts/auth-context";
+import { getFullUserProgress, getUserStats } from "@/lib/database";
+import { getAllOpportunities, getAllCourses } from "@/lib/data";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { user, logout } = useAuth();
+  const [userProgress, setUserProgress] = useState<any>(null);
+  const [stats, setStats] = useState<any>(null);
 
   useEffect(() => {
     if (!user) {
-      router.push("/login");
+      router.push("/");
+    } else {
+      const progress = getFullUserProgress(user.id);
+      const userStats = getUserStats(user.id);
+      setUserProgress(progress);
+      setStats(userStats);
     }
   }, [user, router]);
 
-  if (!user) {
+  if (!user || !userProgress || !stats) {
     return null;
   }
 
-  const savedOpportunities = [
-    {
-      id: 1,
-      title: "Международная олимпиада по математике IMO",
-      category: "Олимпиада",
-      deadline: "2026-08-15",
-      daysLeft: 61,
-    },
-    {
-      id: 2,
-      title: "Global Startup Competition",
-      category: "Конкурс",
-      deadline: "2026-07-20",
-      daysLeft: 35,
-    },
-    {
-      id: 4,
-      title: "Хакатон AI for Good",
-      category: "Хакатон",
-      deadline: "2026-06-30",
-      daysLeft: 15,
-    },
-  ];
+  const allOpportunities = getAllOpportunities();
+  const allCourses = getAllCourses();
 
-  const enrolledCourses = [
-    {
-      id: 4,
-      title: "Основы программирования на Python",
-      progress: 65,
-      nextLesson: "Урок 16: Работа с файлами",
-      totalLessons: 24,
-      completedLessons: 15,
-    },
-    {
-      id: 2,
-      title: "Английский для академического успеха",
-      progress: 30,
-      nextLesson: "Урок 10: Academic Writing",
-      totalLessons: 30,
-      completedLessons: 9,
-    },
-  ];
+  // Get saved opportunities with details
+  const savedOpportunities = userProgress.savedOpportunities
+    .map((id: number) => allOpportunities.find(o => o.id === id))
+    .filter(Boolean)
+    .slice(0, 3);
 
-  const recommendations = [
-    {
-      id: 5,
-      title: "Научно-исследовательская программа в МФТИ",
-      type: "opportunity",
-      matchScore: 92,
-      reason: "Подходит твоим интересам: STEM, Физика",
-    },
-    {
-      id: 6,
-      title: "Введение в экономику",
-      type: "course",
-      matchScore: 85,
-      reason: "Связано с твоим интересом: Бизнес",
-    },
-  ];
+  // Get enrolled courses with progress
+  const enrolledCoursesWithProgress = userProgress.enrolledCourses
+    .map((enrollment: any) => {
+      const course = allCourses.find(c => c.id === enrollment.courseId);
+      if (!course) return null;
+      return {
+        ...course,
+        progress: enrollment.progress,
+        completedLessons: enrollment.completedLessons,
+        nextLesson: `Урок ${enrollment.completedLessons + 1}`,
+      };
+    })
+    .filter(Boolean)
+    .slice(0, 2);
+
+  // Generate recommendations based on user interests
+  const recommendations = user.interests
+    .flatMap((interest: string) => {
+      const relatedOpps = allOpportunities.filter(o =>
+        o.tags.includes(interest) && !userProgress.savedOpportunities.includes(o.id)
+      ).slice(0, 1);
+      const relatedCourses = allCourses.filter(c =>
+        c.category === interest && !userProgress.enrolledCourses.some((e: any) => e.courseId === c.id)
+      ).slice(0, 1);
+      return [
+        ...relatedOpps.map(o => ({ ...o, type: 'opportunity', matchScore: 90 })),
+        ...relatedCourses.map(c => ({ ...c, type: 'course', matchScore: 85 }))
+      ];
+    })
+    .slice(0, 2);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -156,7 +145,7 @@ export default function DashboardPage() {
             <div className="bg-card border border-border/60 rounded-lg p-6">
               <div className="flex items-center justify-between mb-2">
                 <Bookmark className="w-5 h-5 text-primary" />
-                <span className="text-2xl font-heading font-bold">{savedOpportunities.length}</span>
+                <span className="text-2xl font-heading font-bold">{stats.savedCount}</span>
               </div>
               <p className="text-sm text-muted-foreground">Сохранено</p>
             </div>
@@ -164,7 +153,7 @@ export default function DashboardPage() {
             <div className="bg-card border border-border/60 rounded-lg p-6">
               <div className="flex items-center justify-between mb-2">
                 <BookOpen className="w-5 h-5 text-primary" />
-                <span className="text-2xl font-heading font-bold">{enrolledCourses.length}</span>
+                <span className="text-2xl font-heading font-bold">{stats.enrolledCount}</span>
               </div>
               <p className="text-sm text-muted-foreground">Активных курсов</p>
             </div>
@@ -198,30 +187,47 @@ export default function DashboardPage() {
                   </Link>
                 </div>
                 <div className="space-y-3">
-                  {savedOpportunities.map((opp) => (
-                    <div
-                      key={opp.id}
-                      className="bg-card border border-border/60 rounded-lg p-4 flex items-center justify-between hover:border-primary/40 transition-colors"
-                    >
-                      <div className="flex-1">
-                        <h3 className="font-semibold mb-1">{opp.title}</h3>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs">
-                            {opp.category}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {opp.daysLeft} дней
-                          </span>
+                  {savedOpportunities.length > 0 ? (
+                    savedOpportunities.map((opp: any) => {
+                      const deadline = new Date(opp.deadline);
+                      const today = new Date();
+                      const daysLeft = Math.ceil((deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+                      return (
+                        <div
+                          key={opp.id}
+                          className="bg-card border border-border/60 rounded-lg p-4 flex items-center justify-between hover:border-primary/40 transition-colors"
+                        >
+                          <div className="flex-1">
+                            <h3 className="font-semibold mb-1">{opp.title}</h3>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs">
+                                {opp.category}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                {daysLeft} дней
+                              </span>
+                            </div>
+                          </div>
+                          <Link href={`/opportunities/${opp.id}`}>
+                            <Button variant="outline" size="sm">
+                              Открыть
+                            </Button>
+                          </Link>
                         </div>
-                      </div>
-                      <Link href={`/opportunities/${opp.id}`}>
-                        <Button variant="outline" size="sm">
-                          Открыть
+                      );
+                    })
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <p>Нет сохраненных возможностей</p>
+                      <Link href="/opportunities">
+                        <Button variant="outline" size="sm" className="mt-4">
+                          Найти возможности
                         </Button>
                       </Link>
                     </div>
-                  ))}
+                  )}
                 </div>
               </section>
 
@@ -234,43 +240,54 @@ export default function DashboardPage() {
                   </Link>
                 </div>
                 <div className="space-y-4">
-                  {enrolledCourses.map((course) => (
-                    <div
-                      key={course.id}
-                      className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors"
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <h3 className="font-heading font-semibold mb-1">{course.title}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {course.nextLesson}
-                          </p>
+                  {enrolledCoursesWithProgress.length > 0 ? (
+                    enrolledCoursesWithProgress.map((course: any) => (
+                      <div
+                        key={course.id}
+                        className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors"
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <h3 className="font-heading font-semibold mb-1">{course.title}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              {course.nextLesson}
+                            </p>
+                          </div>
+                          <span className="text-sm font-semibold text-primary">
+                            {course.progress}%
+                          </span>
                         </div>
-                        <span className="text-sm font-semibold text-primary">
-                          {course.progress}%
-                        </span>
-                      </div>
 
-                      {/* Progress Bar */}
-                      <div className="mb-3">
-                        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-primary transition-all duration-300"
-                            style={{ width: `${course.progress}%` }}
-                          />
+                        {/* Progress Bar */}
+                        <div className="mb-3">
+                          <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-primary transition-all duration-300"
+                              style={{ width: `${course.progress}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-muted-foreground">
+                            {course.completedLessons} / {course.lessons} уроков
+                          </span>
+                          <Link href={`/courses/${course.id}`}>
+                            <Button size="sm">Продолжить</Button>
+                          </Link>
                         </div>
                       </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">
-                          {course.completedLessons} / {course.totalLessons} уроков
-                        </span>
-                        <Link href={`/courses/${course.id}`}>
-                          <Button size="sm">Продолжить</Button>
-                        </Link>
-                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <p>Нет активных курсов</p>
+                      <Link href="/courses">
+                        <Button variant="outline" size="sm" className="mt-4">
+                          Найти курсы
+                        </Button>
+                      </Link>
                     </div>
-                  ))}
+                  )}
                 </div>
               </section>
             </div>
@@ -284,27 +301,33 @@ export default function DashboardPage() {
                   <h2 className="text-xl font-heading font-bold">Рекомендации</h2>
                 </div>
                 <div className="space-y-3">
-                  {recommendations.map((rec) => (
-                    <div
-                      key={rec.id}
-                      className="bg-card border border-border/60 rounded-lg p-4 hover:border-primary/40 transition-colors"
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-semibold text-sm">{rec.title}</h3>
-                        <span className="text-xs font-semibold text-primary px-2 py-0.5 bg-primary/10 rounded">
-                          {rec.matchScore}%
-                        </span>
+                  {recommendations.length > 0 ? (
+                    recommendations.map((rec: any) => (
+                      <div
+                        key={rec.id}
+                        className="bg-card border border-border/60 rounded-lg p-4 hover:border-primary/40 transition-colors"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="font-semibold text-sm">{rec.title}</h3>
+                          <span className="text-xs font-semibold text-primary px-2 py-0.5 bg-primary/10 rounded">
+                            {rec.matchScore}%
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mb-3">
+                          Подходит твоим интересам: {user.interests.join(", ")}
+                        </p>
+                        <Link href={rec.type === "opportunity" ? `/opportunities/${rec.id}` : `/courses/${rec.id}`}>
+                          <Button variant="outline" size="sm" className="w-full">
+                            Посмотреть
+                          </Button>
+                        </Link>
                       </div>
-                      <p className="text-xs text-muted-foreground mb-3">
-                        {rec.reason}
-                      </p>
-                      <Link href={rec.type === "opportunity" ? `/opportunities/${rec.id}` : `/courses/${rec.id}`}>
-                        <Button variant="outline" size="sm" className="w-full">
-                          Посмотреть
-                        </Button>
-                      </Link>
+                    ))
+                  ) : (
+                    <div className="text-center py-4 text-sm text-muted-foreground">
+                      Пока нет рекомендаций
                     </div>
-                  ))}
+                  )}
                 </div>
               </section>
 

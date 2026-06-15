@@ -12,7 +12,12 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { getAllCourses } from "@/lib/data";
-import { enrollCourse, unenrollCourse, isCourseEnrolled } from "@/lib/store";
+import {
+  enrollCourse,
+  unenrollCourse,
+  isCourseEnrolled,
+  getEnrolledCourses,
+} from "@/lib/database";
 import { getDifficultyColor } from "@/lib/utils-colors";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { StreakWidget } from "@/components/streak-widget";
@@ -33,26 +38,24 @@ export default function CoursesPage() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/login");
+      router.push("/");
+    } else {
+      setEnrolledCourses(getEnrolledCourses(user.id));
     }
   }, [user, router]);
-
-  useEffect(() => {
-    setEnrolledCourses(
-      courses.map(course => course.id).filter(id => isCourseEnrolled(id))
-    );
-  }, []);
 
   if (!user) {
     return null;
   }
 
   const handleEnroll = (id: number) => {
+    if (!user) return;
+
     if (enrolledCourses.includes(id)) {
-      unenrollCourse(id);
+      unenrollCourse(user.id, id);
       setEnrolledCourses(enrolledCourses.filter(courseId => courseId !== id));
     } else {
-      enrollCourse(id);
+      enrollCourse(user.id, id);
       setEnrolledCourses([...enrolledCourses, id]);
     }
   };

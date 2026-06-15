@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,13 +11,34 @@ import {
   Users,
   Calendar,
   Award,
+  Zap,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo } from "@/components/logo";
+import { useAuth } from "@/contexts/auth-context";
+import { AuthModal } from "@/components/auth-modal";
 
 export default function HomePage() {
+  const { user, logout } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [redirectTo, setRedirectTo] = useState<string | undefined>();
+
+  const handleProtectedClick = (e: React.MouseEvent, path: string) => {
+    if (!user) {
+      e.preventDefault();
+      setRedirectTo(path);
+      setShowAuthModal(true);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        redirectTo={redirectTo}
+      />
+
       {/* Navigation */}
       <nav className="border-b border-border/40 backdrop-blur-sm sticky top-0 z-50 bg-background/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,13 +46,25 @@ export default function HomePage() {
             <Logo />
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/opportunities" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link
+                href="/opportunities"
+                className="text-sm font-medium hover:text-primary transition-colors"
+                onClick={(e) => handleProtectedClick(e, "/opportunities")}
+              >
                 Возможности
               </Link>
-              <Link href="/courses" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link
+                href="/courses"
+                className="text-sm font-medium hover:text-primary transition-colors"
+                onClick={(e) => handleProtectedClick(e, "/courses")}
+              >
                 Курсы
               </Link>
-              <Link href="/leaderboard" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link
+                href="/leaderboard"
+                className="text-sm font-medium hover:text-primary transition-colors"
+                onClick={(e) => handleProtectedClick(e, "/leaderboard")}
+              >
                 Лидерборд
               </Link>
               <Link href="/about-us" className="text-sm font-medium hover:text-primary transition-colors">
@@ -44,16 +80,28 @@ export default function HomePage() {
 
             <div className="flex items-center gap-3">
               <ThemeToggle />
-              <Link href="/login">
-                <Button variant="ghost" size="sm">
-                  Вход
-                </Button>
-              </Link>
-              <Link href="/register">
-                <Button size="sm" className="bg-primary hover:bg-primary/90">
-                  Регистрация
-                </Button>
-              </Link>
+              {user ? (
+                <>
+                  <Link href="/dashboard">
+                    <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-lg">
+                      <Zap className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-semibold">{user.coins}</span>
+                    </div>
+                  </Link>
+                  <Button variant="ghost" size="sm" onClick={logout}>
+                    {user.name}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="ghost" size="sm" onClick={() => setShowAuthModal(true)}>
+                    Вход
+                  </Button>
+                  <Button size="sm" className="bg-primary hover:bg-primary/90" onClick={() => setShowAuthModal(true)}>
+                    Регистрация
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -78,12 +126,18 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mb-12">
-              <Link href="/opportunities">
+              <Link
+                href="/opportunities"
+                onClick={(e) => handleProtectedClick(e, "/opportunities")}
+              >
                 <Button size="lg" className="bg-primary hover:bg-primary/90 text-white">
                   Найти возможности
                 </Button>
               </Link>
-              <Link href="/courses">
+              <Link
+                href="/courses"
+                onClick={(e) => handleProtectedClick(e, "/courses")}
+              >
                 <Button size="lg" variant="outline">
                   Посмотреть курсы
                 </Button>
@@ -190,7 +244,16 @@ export default function HomePage() {
               Регистрация займёт меньше минуты. Получи доступ ко всем возможностям и курсам.
             </p>
             <Link href="/register">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white">
+              <Button
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-white"
+                onClick={(e) => {
+                  if (!user) {
+                    e.preventDefault();
+                    setShowAuthModal(true);
+                  }
+                }}
+              >
                 Создать аккаунт бесплатно
               </Button>
             </Link>

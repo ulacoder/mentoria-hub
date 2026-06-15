@@ -14,7 +14,12 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { getAllOpportunities } from "@/lib/data";
-import { saveOpportunity, unsaveOpportunity, isOpportunitySaved } from "@/lib/store";
+import {
+  saveOpportunity,
+  unsaveOpportunity,
+  isOpportunitySaved,
+  getSavedOpportunities,
+} from "@/lib/database";
 import { getDeadlineColor, getDeadlineDays } from "@/lib/utils-colors";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { StreakWidget } from "@/components/streak-widget";
@@ -39,26 +44,24 @@ export default function OpportunitiesPage() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/login");
+      router.push("/");
+    } else {
+      setSavedItems(getSavedOpportunities(user.id));
     }
   }, [user, router]);
-
-  useEffect(() => {
-    setSavedItems(
-      opportunities.map(opp => opp.id).filter(id => isOpportunitySaved(id))
-    );
-  }, []);
 
   if (!user) {
     return null;
   }
 
   const handleSave = (id: number) => {
+    if (!user) return;
+
     if (savedItems.includes(id)) {
-      unsaveOpportunity(id);
+      unsaveOpportunity(user.id, id);
       setSavedItems(savedItems.filter(item => item !== id));
     } else {
-      saveOpportunity(id);
+      saveOpportunity(user.id, id);
       setSavedItems([...savedItems, id]);
     }
   };
