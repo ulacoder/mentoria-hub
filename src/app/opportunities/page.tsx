@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   GraduationCap,
@@ -18,12 +19,15 @@ import { getDeadlineColor, getDeadlineDays } from "@/lib/utils-colors";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { StreakWidget } from "@/components/streak-widget";
 import { Logo } from "@/components/logo";
+import { useAuth } from "@/contexts/auth-context";
 
 const categories = ["Все", "Олимпиада", "Конкурс", "Стипендия", "Летняя программа", "Хакатон", "Конференция", "Исследовательская программа"];
 const fields = ["Все", "STEM", "Бизнес", "IT", "Программирование", "Социальное влияние", "Наука", "Математика", "Физика"];
 const grades = ["Все", "8 класс", "9 класс", "10 класс", "11 класс", "Выпускники"];
 
 export default function OpportunitiesPage() {
+  const router = useRouter();
+  const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState("Все");
   const [selectedField, setSelectedField] = useState("Все");
   const [selectedGrade, setSelectedGrade] = useState("Все");
@@ -34,10 +38,20 @@ export default function OpportunitiesPage() {
   const opportunities = getAllOpportunities();
 
   useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  }, [user, router]);
+
+  useEffect(() => {
     setSavedItems(
       opportunities.map(opp => opp.id).filter(id => isOpportunitySaved(id))
     );
   }, []);
+
+  if (!user) {
+    return null;
+  }
 
   const handleSave = (id: number) => {
     if (savedItems.includes(id)) {

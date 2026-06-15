@@ -44,9 +44,14 @@ export default function HomePage() {
 
             <div className="flex items-center gap-3">
               <ThemeToggle />
-              <Link href="/dashboard">
+              <Link href="/login">
+                <Button variant="ghost" size="sm">
+                  Вход
+                </Button>
+              </Link>
+              <Link href="/register">
                 <Button size="sm" className="bg-primary hover:bg-primary/90">
-                  Начать
+                  Регистрация
                 </Button>
               </Link>
             </div>
@@ -184,7 +189,7 @@ export default function HomePage() {
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
               Регистрация займёт меньше минуты. Получи доступ ко всем возможностям и курсам.
             </p>
-            <Link href="/dashboard">
+            <Link href="/register">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-white">
                 Создать аккаунт бесплатно
               </Button>

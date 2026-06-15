@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,16 +17,22 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { StreakWidget } from "@/components/streak-widget";
+import { Logo } from "@/components/logo";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function DashboardPage() {
-  // Mock user data
-  const user = {
-    name: "Алия",
-    grade: "10 класс",
-    interests: ["STEM", "Программирование", "Бизнес"],
-    coins: 350,
-    rank: 42,
-  };
+  const router = useRouter();
+  const { user, logout } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  }, [user, router]);
+
+  if (!user) {
+    return null;
+  }
 
   const savedOpportunities = [
     {
@@ -92,12 +100,7 @@ export default function DashboardPage() {
       <nav className="border-b border-border/40 backdrop-blur-sm sticky top-0 z-50 bg-background/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl font-heading font-bold">Mentoria Hub</span>
-            </Link>
+            <Logo />
 
             <div className="hidden md:flex items-center gap-6">
               <Link href="/opportunities" className="text-sm font-medium hover:text-primary transition-colors">
@@ -127,7 +130,7 @@ export default function DashboardPage() {
                 <Zap className="w-4 h-4 text-primary" />
                 <span className="text-sm font-semibold">{user.coins}</span>
               </div>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" onClick={logout}>
                 {user.name}
               </Button>
             </div>
@@ -177,7 +180,7 @@ export default function DashboardPage() {
             <div className="bg-card border border-border/60 rounded-lg p-6">
               <div className="flex items-center justify-between mb-2">
                 <Award className="w-5 h-5 text-primary" />
-                <span className="text-2xl font-heading font-bold">#{user.rank}</span>
+                <span className="text-2xl font-heading font-bold">#{user.rank || 0}</span>
               </div>
               <p className="text-sm text-muted-foreground">Место в рейтинге</p>
             </div>

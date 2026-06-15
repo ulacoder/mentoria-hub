@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   GraduationCap,
@@ -16,11 +17,14 @@ import { getDifficultyColor } from "@/lib/utils-colors";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { StreakWidget } from "@/components/streak-widget";
 import { Logo } from "@/components/logo";
+import { useAuth } from "@/contexts/auth-context";
 
 const categories = ["Все", "Математика", "Английский язык", "Программирование", "Физика", "Экономика", "Подготовка к тестам", "Карьера", "Информатика"];
 const levels = ["Все", "Начальный", "Средний", "Продвинутый"];
 
 export default function CoursesPage() {
+  const router = useRouter();
+  const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState("Все");
   const [selectedLevel, setSelectedLevel] = useState("Все");
   const [enrolledCourses, setEnrolledCourses] = useState<number[]>([]);
@@ -28,10 +32,20 @@ export default function CoursesPage() {
   const courses = getAllCourses();
 
   useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  }, [user, router]);
+
+  useEffect(() => {
     setEnrolledCourses(
       courses.map(course => course.id).filter(id => isCourseEnrolled(id))
     );
   }, []);
+
+  if (!user) {
+    return null;
+  }
 
   const handleEnroll = (id: number) => {
     if (enrolledCourses.includes(id)) {

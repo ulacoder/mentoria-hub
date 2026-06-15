@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +15,8 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { StreakWidget } from "@/components/streak-widget";
+import { Logo } from "@/components/logo";
+import { useAuth } from "@/contexts/auth-context";
 
 // Mock leaderboard data
 const leaderboardData = [
@@ -120,9 +124,22 @@ const badges = [
 ];
 
 export default function LeaderboardPage() {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  }, [user, router]);
+
+  if (!user) {
+    return null;
+  }
+
   const currentUser = {
-    rank: 42,
-    name: "Алия",
+    rank: user.rank || 42,
+    name: user.name,
     points: 850,
   };
 
@@ -132,12 +149,7 @@ export default function LeaderboardPage() {
       <nav className="border-b border-border/40 backdrop-blur-sm sticky top-0 z-50 bg-background/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl font-heading font-bold">Mentoria Hub</span>
-            </Link>
+            <Logo />
 
             <div className="hidden md:flex items-center gap-6">
               <Link href="/opportunities" className="text-sm font-medium hover:text-primary transition-colors">
