@@ -9,6 +9,7 @@ import {
   Calendar,
   Award,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function HomePage() {
   return (
@@ -24,12 +25,18 @@ export default function HomePage() {
               <span className="text-xl font-heading font-bold">Mentoria Hub</span>
             </div>
 
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-6">
               <Link href="/opportunities" className="text-sm font-medium hover:text-primary transition-colors">
                 Возможности
               </Link>
               <Link href="/courses" className="text-sm font-medium hover:text-primary transition-colors">
                 Курсы
+              </Link>
+              <Link href="/leaderboard" className="text-sm font-medium hover:text-primary transition-colors">
+                Лидерборд
+              </Link>
+              <Link href="/about-us" className="text-sm font-medium hover:text-primary transition-colors">
+                О нас
               </Link>
               <Link href="/features" className="text-sm font-medium hover:text-primary transition-colors">
                 Функционал
@@ -40,12 +47,12 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="sm">
-                Вход
-              </Button>
-              <Button size="sm" className="gradient-primary text-white border-0">
-                Регистрация
-              </Button>
+              <ThemeToggle />
+              <Link href="/dashboard">
+                <Button size="sm" className="bg-primary hover:bg-primary/90">
+                  Начать
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

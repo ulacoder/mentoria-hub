@@ -13,6 +13,8 @@ import {
   Clock,
   Zap,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { StreakWidget } from "@/components/streak-widget";
 
 export default function DashboardPage() {
   // Mock user data
@@ -97,7 +99,7 @@ export default function DashboardPage() {
               <span className="text-xl font-heading font-bold">Mentoria Hub</span>
             </Link>
 
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-6">
               <Link href="/opportunities" className="text-sm font-medium hover:text-primary transition-colors">
                 Возможности
               </Link>
@@ -107,9 +109,20 @@ export default function DashboardPage() {
               <Link href="/leaderboard" className="text-sm font-medium hover:text-primary transition-colors">
                 Лидерборд
               </Link>
+              <Link href="/about-us" className="text-sm font-medium hover:text-primary transition-colors">
+                О нас
+              </Link>
+              <Link href="/features" className="text-sm font-medium hover:text-primary transition-colors">
+                Функционал
+              </Link>
+              <Link href="/about" className="text-sm font-medium hover:text-primary transition-colors">
+                О платформе
+              </Link>
             </div>
 
             <div className="flex items-center gap-3">
+              <StreakWidget />
+              <ThemeToggle />
               <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-lg">
                 <Zap className="w-4 h-4 text-primary" />
                 <span className="text-sm font-semibold">{user.coins}</span>

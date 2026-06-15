@@ -11,6 +11,8 @@ import {
   Zap,
   Star,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { StreakWidget } from "@/components/streak-widget";
 
 // Mock leaderboard data
 const leaderboardData = [
@@ -137,7 +139,7 @@ export default function LeaderboardPage() {
               <span className="text-xl font-heading font-bold">Mentoria Hub</span>
             </Link>
 
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-6">
               <Link href="/opportunities" className="text-sm font-medium hover:text-primary transition-colors">
                 Возможности
               </Link>
@@ -147,13 +149,22 @@ export default function LeaderboardPage() {
               <Link href="/leaderboard" className="text-sm font-medium text-primary">
                 Лидерборд
               </Link>
+              <Link href="/about-us" className="text-sm font-medium hover:text-primary transition-colors">
+                О нас
+              </Link>
+              <Link href="/features" className="text-sm font-medium hover:text-primary transition-colors">
+                Функционал
+              </Link>
+              <Link href="/about" className="text-sm font-medium hover:text-primary transition-colors">
+                О платформе
+              </Link>
             </div>
 
             <div className="flex items-center gap-3">
+              <StreakWidget />
+              <ThemeToggle />
               <Link href="/dashboard">
-                <Button variant="ghost" size="sm">
-                  Dashboard
-                </Button>
+                <Button size="sm">Dashboard</Button>
               </Link>
             </div>
           </div>

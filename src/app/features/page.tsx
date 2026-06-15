@@ -12,6 +12,7 @@ import {
   Globe,
   Shield,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function FeaturesPage() {
   return (
@@ -27,12 +28,18 @@ export default function FeaturesPage() {
               <span className="text-xl font-heading font-bold">Mentoria Hub</span>
             </Link>
 
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-6">
               <Link href="/opportunities" className="text-sm font-medium hover:text-primary transition-colors">
                 Возможности
               </Link>
               <Link href="/courses" className="text-sm font-medium hover:text-primary transition-colors">
                 Курсы
+              </Link>
+              <Link href="/leaderboard" className="text-sm font-medium hover:text-primary transition-colors">
+                Лидерборд
+              </Link>
+              <Link href="/about-us" className="text-sm font-medium hover:text-primary transition-colors">
+                О нас
               </Link>
               <Link href="/features" className="text-sm font-medium text-primary">
                 Функционал
@@ -43,13 +50,9 @@ export default function FeaturesPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="sm">
-                Вход
-              </Button>
+              <ThemeToggle />
               <Link href="/dashboard">
-                <Button size="sm" className="bg-primary hover:bg-primary/90 text-white">
-                  Регистрация
-                </Button>
+                <Button size="sm">Начать</Button>
               </Link>
             </div>
           </div>

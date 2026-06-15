@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   GraduationCap,
@@ -12,118 +12,15 @@ import {
   Bookmark,
   ExternalLink,
 } from "lucide-react";
+import { getAllOpportunities } from "@/lib/data";
+import { saveOpportunity, unsaveOpportunity, isOpportunitySaved } from "@/lib/store";
+import { getDeadlineColor, getDeadlineDays } from "@/lib/utils-colors";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { StreakWidget } from "@/components/streak-widget";
 
-// Mock data для возможностей
-const opportunities = [
-  {
-    id: 1,
-    title: "Международная олимпиада по математике IMO",
-    category: "Олимпиада",
-    format: "Онлайн",
-    location: "Международная",
-    deadline: "2026-08-15",
-    cost: "Бесплатно",
-    grades: ["10 класс", "11 класс"],
-    fields: ["STEM", "Математика"],
-    description: "Престижная математическая олимпиада для старшеклассников со всего мира.",
-    organizer: "International Mathematical Olympiad",
-  },
-  {
-    id: 2,
-    title: "Летняя школа MIT по программированию",
-    category: "Летняя программа",
-    format: "Очная",
-    location: "США, Бостон",
-    deadline: "2026-07-01",
-    cost: "Платно: $5000",
-    grades: ["9 класс", "10 класс", "11 класс"],
-    fields: ["STEM", "Программирование", "IT"],
-    description: "Интенсивная двухнедельная программа по CS и AI в MIT.",
-    organizer: "Massachusetts Institute of Technology",
-  },
-  {
-    id: 3,
-    title: "Стипендия Болашак для обучения за рубежом",
-    category: "Стипендия",
-    format: "Онлайн подача",
-    location: "Казахстан",
-    deadline: "2026-09-30",
-    cost: "Бесплатно",
-    grades: ["11 класс", "Выпускники"],
-    fields: ["Все направления"],
-    description: "Государственная стипендия для обучения в лучших университетах мира.",
-    organizer: "Центр международных программ",
-  },
-  {
-    id: 4,
-    title: "Global Startup Competition",
-    category: "Конкурс",
-    format: "Гибрид",
-    location: "Онлайн + Финал в Алматы",
-    deadline: "2026-07-20",
-    cost: "Бесплатно",
-    grades: ["9 класс", "10 класс", "11 класс"],
-    fields: ["Бизнес", "Предпринимательство"],
-    description: "Питч стартап-идеи перед инвесторами. Призовой фонд $10,000.",
-    organizer: "Kazakhstan Startup Foundation",
-  },
-  {
-    id: 5,
-    title: "Научно-исследовательская программа в МФТИ",
-    category: "Исследовательская программа",
-    format: "Очная",
-    location: "Россия, Москва",
-    deadline: "2026-08-10",
-    cost: "Бесплатно",
-    grades: ["10 класс", "11 класс"],
-    fields: ["STEM", "Физика", "Наука"],
-    description: "Месячная программа работы в лабораториях МФТИ под руководством учёных.",
-    organizer: "МФТИ",
-  },
-  {
-    id: 6,
-    title: "Хакатон AI for Good",
-    category: "Хакатон",
-    format: "Онлайн",
-    location: "Международная",
-    deadline: "2026-06-30",
-    cost: "Бесплатно",
-    grades: ["9 класс", "10 класс", "11 класс"],
-    fields: ["IT", "Программирование", "Социальное влияние"],
-    description: "48-часовой хакатон по созданию AI-решений для социальных проблем.",
-    organizer: "Tech For Good Foundation",
-  },
-  {
-    id: 7,
-    title: "Стипендия на курс SAT Prep",
-    category: "Стипендия",
-    format: "Онлайн",
-    location: "Онлайн",
-    deadline: "2026-07-15",
-    cost: "Бесплатно",
-    grades: ["10 класс", "11 класс"],
-    fields: ["Подготовка к тестам"],
-    description: "Полная стипендия на 3-месячный курс подготовки к SAT.",
-    organizer: "Mentoria Education",
-  },
-  {
-    id: 8,
-    title: "Международная конференция Model UN",
-    category: "Конференция",
-    format: "Очная",
-    location: "Нур-Султан",
-    deadline: "2026-08-01",
-    cost: "Платно: 15,000₸",
-    grades: ["9 класс", "10 класс", "11 класс"],
-    fields: ["Социальное влияние", "Политика"],
-    description: "Трёхдневная модель ООН с участием школьников из 15 стран.",
-    organizer: "Kazakhstan Model UN Society",
-  },
-];
-
-const categories = ["Все", "Олимпиада", "Конкурс", "Стипендия", "Летняя программа", "Хакатон", "Конференция"];
-const fields = ["Все", "STEM", "Бизнес", "IT", "Программирование", "Социальное влияние", "Наука"];
-const grades = ["Все", "9 класс", "10 класс", "11 класс"];
+const categories = ["Все", "Олимпиада", "Конкурс", "Стипендия", "Летняя программа", "Хакатон", "Конференция", "Исследовательская программа"];
+const fields = ["Все", "STEM", "Бизнес", "IT", "Программирование", "Социальное влияние", "Наука", "Математика", "Физика"];
+const grades = ["Все", "8 класс", "9 класс", "10 класс", "11 класс", "Выпускники"];
 
 export default function OpportunitiesPage() {
   const [selectedCategory, setSelectedCategory] = useState("Все");
@@ -131,11 +28,30 @@ export default function OpportunitiesPage() {
   const [selectedGrade, setSelectedGrade] = useState("Все");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [savedItems, setSavedItems] = useState<number[]>([]);
+
+  const opportunities = getAllOpportunities();
+
+  useEffect(() => {
+    setSavedItems(
+      opportunities.map(opp => opp.id).filter(id => isOpportunitySaved(id))
+    );
+  }, []);
+
+  const handleSave = (id: number) => {
+    if (savedItems.includes(id)) {
+      unsaveOpportunity(id);
+      setSavedItems(savedItems.filter(item => item !== id));
+    } else {
+      saveOpportunity(id);
+      setSavedItems([...savedItems, id]);
+    }
+  };
 
   const filteredOpportunities = opportunities.filter((opp) => {
     const matchesCategory = selectedCategory === "Все" || opp.category === selectedCategory;
-    const matchesField = selectedField === "Все" || opp.fields.includes(selectedField);
-    const matchesGrade = selectedGrade === "Все" || opp.grades.includes(selectedGrade);
+    const matchesField = selectedField === "Все" || opp.tags.includes(selectedField);
+    const matchesGrade = selectedGrade === "Все" || opp.grade.includes(selectedGrade);
     const matchesSearch = searchQuery === "" ||
       opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       opp.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -156,12 +72,18 @@ export default function OpportunitiesPage() {
               <span className="text-xl font-heading font-bold">Mentoria Hub</span>
             </Link>
 
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-6">
               <Link href="/opportunities" className="text-sm font-medium text-primary">
                 Возможности
               </Link>
               <Link href="/courses" className="text-sm font-medium hover:text-primary transition-colors">
                 Курсы
+              </Link>
+              <Link href="/leaderboard" className="text-sm font-medium hover:text-primary transition-colors">
+                Лидерборд
+              </Link>
+              <Link href="/about-us" className="text-sm font-medium hover:text-primary transition-colors">
+                О нас
               </Link>
               <Link href="/features" className="text-sm font-medium hover:text-primary transition-colors">
                 Функционал
@@ -172,12 +94,11 @@ export default function OpportunitiesPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="sm">
-                Вход
-              </Button>
+              <StreakWidget />
+              <ThemeToggle />
               <Link href="/dashboard">
                 <Button size="sm" className="bg-primary hover:bg-primary/90 text-white">
-                  Регистрация
+                  Dashboard
                 </Button>
               </Link>
             </div>
@@ -295,63 +216,75 @@ export default function OpportunitiesPage() {
 
           {/* Opportunities Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredOpportunities.map((opp) => (
-              <div
-                key={opp.id}
-                className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors group"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-medium rounded-md">
-                    {opp.category}
-                  </span>
-                  <button className="text-muted-foreground hover:text-primary transition-colors">
-                    <Bookmark className="w-5 h-5" />
-                  </button>
-                </div>
+            {filteredOpportunities.map((opp) => {
+              const daysLeft = Math.ceil((new Date(opp.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+              const isSaved = savedItems.includes(opp.id);
 
-                <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
-                  {opp.title}
-                </h3>
-
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                  {opp.description}
-                </p>
-
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">{opp.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Clock className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Дедлайн: {new Date(opp.deadline).toLocaleDateString('ru-RU')}</span>
-                  </div>
-                  <div className="text-sm font-medium text-foreground">
-                    {opp.cost}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {opp.grades.slice(0, 2).map((grade, idx) => (
-                    <span key={idx} className="px-2 py-1 bg-muted text-xs rounded">
-                      {grade}
+              return (
+                <div
+                  key={opp.id}
+                  className="bg-card border-2 border-primary/20 rounded-lg p-6 hover:border-primary/50 transition-all group hover:shadow-lg hover:shadow-primary/10"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-medium rounded-md border border-primary/30">
+                      {opp.category}
                     </span>
-                  ))}
-                  {opp.fields.slice(0, 2).map((field, idx) => (
-                    <span key={idx} className="px-2 py-1 bg-muted text-xs rounded">
-                      {field}
-                    </span>
-                  ))}
-                </div>
+                    <button
+                      onClick={() => handleSave(opp.id)}
+                      className={`transition-colors ${
+                        isSaved ? "text-accent" : "text-muted-foreground hover:text-accent"
+                      }`}
+                    >
+                      <Bookmark className={`w-5 h-5 ${isSaved ? "fill-current" : ""}`} />
+                    </button>
+                  </div>
 
-                <Link href={`/opportunities/${opp.id}`}>
-                  <Button variant="outline" size="sm" className="w-full group-hover:border-primary/60">
-                    Подробнее
-                    <ExternalLink className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            ))}
+                  <h3 className="font-heading font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
+                    {opp.title}
+                  </h3>
+
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                    {opp.description}
+                  </p>
+
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-sm">
+                      <MapPin className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-muted-foreground">{opp.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Clock className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-muted-foreground">
+                        {new Date(opp.deadline).toLocaleDateString('ru-RU')}
+                      </span>
+                    </div>
+                    {daysLeft > 0 && (
+                      <div className={`inline-flex items-center gap-1 px-2 py-1 rounded border text-xs font-medium ${getDeadlineColor(opp.deadline)}`}>
+                        <Clock className="w-3 h-3" />
+                        Осталось {daysLeft} {daysLeft === 1 ? 'день' : daysLeft < 5 ? 'дня' : 'дней'}
+                      </div>
+                    )}
+                    <div className="text-sm font-medium text-foreground">
+                      {opp.cost}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {opp.grade.slice(0, 2).map((grade, idx) => (
+                      <span key={idx} className="px-2 py-1 bg-muted text-xs rounded border border-border">
+                        {grade}
+                      </span>
+                    ))}
+                  </div>
+
+                  <Link href={`/opportunities/${opp.id}`}>
+                    <Button size="sm" variant="outline" className="w-full border-primary/30 hover:bg-primary/10">
+                      Подробнее
+                    </Button>
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

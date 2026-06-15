@@ -48,73 +48,76 @@
 }
 
 :root {
-  /* Mentoria Hub Design System - Vibrant & Block-based */
-  --background: oklch(0.145 0 0); /* #0F172A - Dark background */
-  --foreground: oklch(0.985 0.002 264.5); /* #F8FAFC - Light text */
-  --card: oklch(0.234 0.015 258.3); /* #272F42 - Muted card */
-  --card-foreground: oklch(0.985 0.002 264.5);
-  --popover: oklch(0.205 0.018 256.8); /* #1E293B */
-  --popover-foreground: oklch(0.985 0.002 264.5);
-  --primary: oklch(0.711 0.168 60.4); /* #F59E0B - Orange */
-  --primary-foreground: oklch(0.145 0 0); /* #0F172A */
-  --secondary: oklch(0.763 0.161 71.7); /* #FBBF24 - Light orange */
-  --secondary-foreground: oklch(0.145 0 0);
-  --muted: oklch(0.234 0.015 258.3); /* #272F42 */
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.626 0.223 293.4); /* #8B5CF6 - Purple */
-  --accent-foreground: oklch(0.985 0.002 264.5);
-  --destructive: oklch(0.577 0.245 27.325); /* #EF4444 */
-  --border: oklch(0.371 0.02 257.4); /* #334155 */
-  --input: oklch(0.371 0.02 257.4);
-  --ring: oklch(0.711 0.168 60.4); /* #F59E0B */
-  --chart-1: oklch(0.711 0.168 60.4);
-  --chart-2: oklch(0.626 0.223 293.4);
-  --chart-3: oklch(0.763 0.161 71.7);
-  --chart-4: oklch(0.706 0.207 328.4);
-  --chart-5: oklch(0.577 0.245 27.325);
-  --radius: 0.75rem; /* 12px */
-  --sidebar: oklch(0.205 0.018 256.8);
-  --sidebar-foreground: oklch(0.985 0.002 264.5);
-  --sidebar-primary: oklch(0.711 0.168 60.4);
-  --sidebar-primary-foreground: oklch(0.145 0 0);
-  --sidebar-accent: oklch(0.234 0.015 258.3);
-  --sidebar-accent-foreground: oklch(0.985 0.002 264.5);
-  --sidebar-border: oklch(0.371 0.02 257.4);
-  --sidebar-ring: oklch(0.711 0.168 60.4);
+  /* Mentoria Hub Design System - Light Mode */
+  --background: oklch(0.98 0.01 280); /* Light purple-tinted white */
+  --foreground: oklch(0.15 0.05 280); /* Dark purple text */
+  --card: oklch(1 0 0); /* Pure white cards */
+  --card-foreground: oklch(0.15 0.05 280);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.05 280);
+  --primary: oklch(0.65 0.25 293); /* #8B5CF6 - Vibrant Purple */
+  --primary-foreground: oklch(0.98 0.01 280);
+  --secondary: oklch(0.60 0.20 145); /* #10B981 - Vibrant Green */
+  --secondary-foreground: oklch(0.98 0.01 280);
+  --muted: oklch(0.95 0.01 280); /* Light purple-gray */
+  --muted-foreground: oklch(0.45 0.03 280);
+  --accent: oklch(0.60 0.20 145); /* Green accent */
+  --accent-foreground: oklch(0.98 0.01 280);
+  --destructive: oklch(0.60 0.25 30); /* Red */
+  --destructive-foreground: oklch(0.98 0.01 280);
+  --border: oklch(0.75 0.08 293); /* Light purple border */
+  --input: oklch(0.85 0.05 280);
+  --ring: oklch(0.65 0.25 293); /* Purple ring */
+  --chart-1: oklch(0.65 0.25 293); /* Purple */
+  --chart-2: oklch(0.60 0.20 145); /* Green */
+  --chart-3: oklch(0.70 0.20 280); /* Light purple */
+  --chart-4: oklch(0.65 0.18 160); /* Light green */
+  --chart-5: oklch(0.50 0.15 30); /* Orange-red */
+  --radius: 0.75rem;
+  --sidebar: oklch(0.98 0.01 280);
+  --sidebar-foreground: oklch(0.15 0.05 280);
+  --sidebar-primary: oklch(0.65 0.25 293);
+  --sidebar-primary-foreground: oklch(0.98 0.01 280);
+  --sidebar-accent: oklch(0.95 0.01 280);
+  --sidebar-accent-foreground: oklch(0.15 0.05 280);
+  --sidebar-border: oklch(0.75 0.08 293);
+  --sidebar-ring: oklch(0.65 0.25 293);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Mentoria Hub Design System - Dark Mode */
+  --background: oklch(0.18 0.05 280); /* Dark purple background */
+  --foreground: oklch(0.95 0.01 280); /* Light purple-white text */
+  --card: oklch(0.22 0.06 285); /* Dark purple cards */
+  --card-foreground: oklch(0.95 0.01 280);
+  --popover: oklch(0.20 0.05 280);
+  --popover-foreground: oklch(0.95 0.01 280);
+  --primary: oklch(0.70 0.28 293); /* Brighter purple for dark mode */
+  --primary-foreground: oklch(0.98 0.01 280);
+  --secondary: oklch(0.65 0.22 145); /* Brighter green for dark mode */
+  --secondary-foreground: oklch(0.98 0.01 280);
+  --muted: oklch(0.25 0.05 285); /* Dark purple-gray */
+  --muted-foreground: oklch(0.60 0.03 280);
+  --accent: oklch(0.65 0.22 145); /* Green accent */
+  --accent-foreground: oklch(0.98 0.01 280);
+  --destructive: oklch(0.65 0.28 30); /* Brighter red */
+  --destructive-foreground: oklch(0.98 0.01 280);
+  --border: oklch(0.40 0.12 293); /* Purple border */
+  --input: oklch(0.30 0.08 285);
+  --ring: oklch(0.70 0.28 293); /* Bright purple ring */
+  --chart-1: oklch(0.70 0.28 293);
+  --chart-2: oklch(0.65 0.22 145);
+  --chart-3: oklch(0.75 0.22 280);
+  --chart-4: oklch(0.70 0.20 160);
+  --chart-5: oklch(0.60 0.20 30);
+  --sidebar: oklch(0.20 0.05 280);
+  --sidebar-foreground: oklch(0.95 0.01 280);
+  --sidebar-primary: oklch(0.70 0.28 293);
+  --sidebar-primary-foreground: oklch(0.98 0.01 280);
+  --sidebar-accent: oklch(0.25 0.05 285);
+  --sidebar-accent-foreground: oklch(0.95 0.01 280);
+  --sidebar-border: oklch(0.40 0.12 293);
+  --sidebar-ring: oklch(0.70 0.28 293);
 }
 
 @layer base {
@@ -129,18 +132,22 @@
   }
 }
 
-/* Custom gradients for Mentoria Hub */
+/* Custom gradients for Mentoria Hub - Purple/Green theme */
 @layer utilities {
   .gradient-primary {
-    background: linear-gradient(135deg, #F59E0B 0%, #8B5CF6 100%);
+    background: linear-gradient(135deg, #8B5CF6 0%, #10B981 100%);
   }
 
   .gradient-accent {
-    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+    background: linear-gradient(135deg, #10B981 0%, #8B5CF6 100%);
   }
 
-  .gradient-warm {
-    background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+  .gradient-purple {
+    background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%);
+  }
+
+  .gradient-green {
+    background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
   }
 
   .text-gradient {
