@@ -32,6 +32,12 @@ export function Navbar() {
             <Link href="/profile/mbti" className="text-sm font-medium hover:text-primary transition-colors">
               Личность
             </Link>
+            <Link href="/messages" className="text-sm font-medium hover:text-primary transition-colors">
+              Сообщения
+            </Link>
+            <Link href="/game" className="text-sm font-medium hover:text-primary transition-colors">
+              🎮 Игра
+            </Link>
             <Link href="/shop" className="text-sm font-medium hover:text-primary transition-colors">
               Магазин
             </Link>
