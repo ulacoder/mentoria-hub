@@ -18,9 +18,11 @@ import { Logo } from "@/components/logo";
 import { useAuth } from "@/contexts/auth-context";
 import { AuthModal } from "@/components/auth-modal";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { useLocale } from "@/contexts/locale-context";
 
 export default function HomePage() {
   const { user, logout } = useAuth();
+  const { t } = useLocale();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [redirectTo, setRedirectTo] = useState<string | undefined>();
 
@@ -52,30 +54,37 @@ export default function HomePage() {
                 className="text-sm font-medium hover:text-primary transition-colors"
                 onClick={(e) => handleProtectedClick(e, "/opportunities")}
               >
-                Возможности
+                {t("nav.opportunities")}
               </Link>
               <Link
                 href="/courses"
                 className="text-sm font-medium hover:text-primary transition-colors"
                 onClick={(e) => handleProtectedClick(e, "/courses")}
               >
-                Курсы
+                {t("nav.courses")}
+              </Link>
+              <Link
+                href="/shop"
+                className="text-sm font-medium hover:text-primary transition-colors"
+                onClick={(e) => handleProtectedClick(e, "/shop")}
+              >
+                {t("nav.shop")}
               </Link>
               <Link
                 href="/leaderboard"
                 className="text-sm font-medium hover:text-primary transition-colors"
                 onClick={(e) => handleProtectedClick(e, "/leaderboard")}
               >
-                Лидерборд
+                {t("nav.leaderboard")}
               </Link>
               <Link href="/about-us" className="text-sm font-medium hover:text-primary transition-colors">
-                О нас
+                {t("nav.about")}
               </Link>
               <Link href="/features" className="text-sm font-medium hover:text-primary transition-colors">
-                Функционал
+                {t("nav.features")}
               </Link>
               <Link href="/about" className="text-sm font-medium hover:text-primary transition-colors">
-                О платформе
+                {t("footer.about_mentoria")}
               </Link>
             </div>
 
@@ -97,10 +106,10 @@ export default function HomePage() {
               ) : (
                 <>
                   <Button variant="ghost" size="sm" onClick={() => setShowAuthModal(true)}>
-                    Вход
+                    {t("nav.login")}
                   </Button>
                   <Button size="sm" className="bg-primary hover:bg-primary/90" onClick={() => setShowAuthModal(true)}>
-                    Регистрация
+                    {t("nav.register")}
                   </Button>
                 </>
               )}
@@ -114,17 +123,15 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 mb-6">
-              <span className="text-sm font-medium text-primary">Образовательная платформа</span>
+              <span className="text-sm font-medium text-primary">{t("home.platform_badge")}</span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-heading font-bold mb-6 leading-tight">
-              Находи возможности<br />
-              и развивайся в своём темпе
+            <h1 className="text-4xl md:text-5xl font-heading font-bold mb-6 leading-tight whitespace-pre-line">
+              {t("home.hero_title")}
             </h1>
 
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Единая платформа для поиска стипендий, конкурсов, олимпиад и летних программ.
-              Проходи курсы онлайн когда удобно — без привязки к расписанию.
+              {t("home.hero_subtitle")}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mb-12">
@@ -133,7 +140,7 @@ export default function HomePage() {
                 onClick={(e) => handleProtectedClick(e, "/opportunities")}
               >
                 <Button size="lg" className="bg-primary hover:bg-primary/90 text-white">
-                  Найти возможности
+                  {t("home.find_opportunities")}
                 </Button>
               </Link>
               <Link
@@ -141,7 +148,7 @@ export default function HomePage() {
                 onClick={(e) => handleProtectedClick(e, "/courses")}
               >
                 <Button size="lg" variant="outline">
-                  Посмотреть курсы
+                  {t("home.view_courses")}
                 </Button>
               </Link>
             </div>
@@ -150,15 +157,15 @@ export default function HomePage() {
             <div className="flex gap-12 pt-8 border-t border-border/40">
               <div>
                 <div className="text-2xl font-heading font-semibold">500+</div>
-                <div className="text-sm text-muted-foreground">Возможностей</div>
+                <div className="text-sm text-muted-foreground">{t("home.stats.opportunities")}</div>
               </div>
               <div>
                 <div className="text-2xl font-heading font-semibold">50+</div>
-                <div className="text-sm text-muted-foreground">Курсов</div>
+                <div className="text-sm text-muted-foreground">{t("home.stats.courses")}</div>
               </div>
               <div>
                 <div className="text-2xl font-heading font-semibold">2000+</div>
-                <div className="text-sm text-muted-foreground">Учеников</div>
+                <div className="text-sm text-muted-foreground">{t("home.stats.students")}</div>
               </div>
             </div>
           </div>
@@ -170,10 +177,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12">
             <h2 className="text-3xl font-heading font-bold mb-3">
-              Что есть на платформе
+              {t("home.features_title")}
             </h2>
             <p className="text-muted-foreground">
-              Возможности и курсы в одном месте
+              {t("home.features_subtitle")}
             </p>
           </div>
 
@@ -181,54 +188,54 @@ export default function HomePage() {
             {/* Card 1 */}
             <div className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors">
               <Trophy className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-heading font-semibold mb-2">Конкурсы и олимпиады</h3>
+              <h3 className="text-lg font-heading font-semibold mb-2">{t("features.competitions")}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Бизнес-конкурсы, научные олимпиады, хакатоны и международные соревнования
+                {t("features.competitions_desc")}
               </p>
             </div>
 
             {/* Card 2 */}
             <div className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors">
               <Award className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-heading font-semibold mb-2">Стипендии и гранты</h3>
+              <h3 className="text-lg font-heading font-semibold mb-2">{t("features.scholarships")}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Стипендии, гранты на обучение и финансирование проектов
+                {t("features.scholarships_desc")}
               </p>
             </div>
 
             {/* Card 3 */}
             <div className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors">
               <Calendar className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-heading font-semibold mb-2">Летние программы</h3>
+              <h3 className="text-lg font-heading font-semibold mb-2">{t("features.summer_programs")}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Международные летние школы, лагеря и исследовательские программы
+                {t("features.summer_programs_desc")}
               </p>
             </div>
 
             {/* Card 4 */}
             <div className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors">
               <BookOpen className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-heading font-semibold mb-2">Асинхронные курсы</h3>
+              <h3 className="text-lg font-heading font-semibold mb-2">{t("features.async_courses")}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Математика, английский, SAT/IELTS, программирование — учись в своём темпе
+                {t("features.async_courses_desc")}
               </p>
             </div>
 
             {/* Card 5 */}
             <div className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors">
               <Target className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-heading font-semibold mb-2">Персональные рекомендации</h3>
+              <h3 className="text-lg font-heading font-semibold mb-2">{t("features.recommendations")}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Платформа подбирает возможности под твои интересы и цели
+                {t("features.recommendations_desc")}
               </p>
             </div>
 
             {/* Card 6 */}
             <div className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors">
               <Users className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-heading font-semibold mb-2">Трекинг прогресса</h3>
+              <h3 className="text-lg font-heading font-semibold mb-2">{t("features.progress_tracking")}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Следи за дедлайнами, сохраняй возможности и отслеживай прогресс по курсам
+                {t("features.progress_tracking_desc")}
               </p>
             </div>
           </div>
@@ -240,10 +247,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-primary/5 border border-primary/20 rounded-lg p-8 md:p-12 text-center">
             <h2 className="text-2xl md:text-3xl font-heading font-bold mb-3">
-              Начни искать возможности сегодня
+              {t("home.cta_title")}
             </h2>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Регистрация займёт меньше минуты. Получи доступ ко всем возможностям и курсам.
+              {t("home.cta_subtitle")}
             </p>
             <Link href="/register">
               <Button
@@ -256,7 +263,7 @@ export default function HomePage() {
                   }
                 }}
               >
-                Создать аккаунт бесплатно
+                {t("home.cta_button")}
               </Button>
             </Link>
           </div>
@@ -275,7 +282,7 @@ export default function HomePage() {
                 <span className="text-lg font-heading font-bold">Mentoria Hub</span>
               </div>
               <p className="text-sm text-muted-foreground max-w-sm">
-                Платформа для поиска образовательных возможностей и асинхронного обучения для учеников 8-11 классов.
+                {t("footer.description")}
               </p>
             </div>
 

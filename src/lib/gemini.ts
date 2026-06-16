@@ -48,6 +48,11 @@ export async function generateMentorResponse(
   context: MentorContext
 ): Promise<string> {
   try {
+    if (!process.env.GEMINI_API_KEY) {
+      console.error("GEMINI_API_KEY is not set");
+      return "Упс, что-то пошло не так 😅 Попробуй спросить ещё раз!";
+    }
+
     const model = genAI.getGenerativeModel({
       model: "gemini-2.0-flash-exp",
       generationConfig: {

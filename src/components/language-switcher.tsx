@@ -5,9 +5,9 @@ import { Globe } from "lucide-react";
 import { useLocale } from "@/contexts/locale-context";
 
 const languages = [
-  { code: "ru", name: "Русский", flag: "🇷🇺" },
-  { code: "en", name: "English", flag: "🇬🇧" },
-  { code: "kz", name: "Қазақша", flag: "🇰🇿" },
+  { code: "ru", name: "RU", flag: "🇷🇺" },
+  { code: "en", name: "ENG", flag: "🇬🇧" },
+  { code: "kz", name: "KZ", flag: "🇰🇿" },
 ];
 
 export function LanguageSwitcher() {
