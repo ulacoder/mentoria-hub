@@ -63,7 +63,7 @@ export function NaviMentor() {
           conversationHistory,
           userContext: user ? {
             name: user.name,
-            level: user.level,
+            level: user.grade,
             interests: user.interests
           } : undefined
         })
