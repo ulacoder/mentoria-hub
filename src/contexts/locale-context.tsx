@@ -15,8 +15,10 @@ const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("ru");
   const [messages, setMessages] = useState<any>({});
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     // Load from localStorage
     const saved = localStorage.getItem("locale") as Locale;
     if (saved && ["ru", "en", "kz"].includes(saved)) {
@@ -31,7 +33,9 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
 
   const setLocale = (newLocale: Locale) => {
     setLocaleState(newLocale);
-    localStorage.setItem("locale", newLocale);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("locale", newLocale);
+    }
   };
 
   const t = (key: string): string => {
