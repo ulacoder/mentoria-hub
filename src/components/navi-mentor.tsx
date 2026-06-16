@@ -18,15 +18,23 @@ export function NaviMentor() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "navi",
-      content: t("navi.greeting"),
-      timestamp: new Date()
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [hasInitialized, setHasInitialized] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Add greeting message after translations load
+  useEffect(() => {
+    if (!hasInitialized && messages.length === 0) {
+      const greeting = "Привет! 👋 Я Navi — твой персональный AI-ментор. Задавай любые вопросы о платформе, курсах или возможностях!";
+      setMessages([{
+        role: "navi",
+        content: greeting,
+        timestamp: new Date()
+      }]);
+      setHasInitialized(true);
+    }
+  }, [hasInitialized, messages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -64,7 +72,8 @@ export function NaviMentor() {
           userContext: user ? {
             name: user.name,
             level: user.grade,
-            interests: user.interests
+            interests: user.interests,
+            mbti: user.mbti
           } : undefined
         })
       });
@@ -154,7 +163,14 @@ export function NaviMentor() {
           </div>
           <div>
             <h3 className="font-heading font-bold">Navi</h3>
-            <p className="text-xs text-muted-foreground">{t("navi.ai_mentor")} • {t("navi.online")}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("navi.ai_mentor")} • {t("navi.online")}
+              {user?.mbti && (
+                <span className="ml-2 px-2 py-0.5 bg-primary/20 text-primary rounded text-xs font-semibold">
+                  {user.mbti}
+                </span>
+              )}
+            </p>
           </div>
         </div>
 

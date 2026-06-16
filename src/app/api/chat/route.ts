@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
       userLevel: userContext?.level,
       userInterests: userContext?.interests,
       conversationHistory: conversationHistory || [],
+      mbti: userContext?.mbti,
     };
 
     const response = await generateMentorResponse(message, context);

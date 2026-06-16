@@ -11,6 +11,7 @@ export interface User {
   coins: number;
   rank: number;
   role: "student" | "mentor" | "admin";
+  mbti?: string; // MBTI personality type (16 types: INTJ, ENFP, etc.)
 }
 
 interface AuthContextType {

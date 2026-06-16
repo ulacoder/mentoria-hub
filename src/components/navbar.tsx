@@ -21,25 +21,22 @@ export function Navbar() {
 
           <div className="hidden md:flex items-center gap-6">
             <Link href="/opportunities" className="text-sm font-medium hover:text-primary transition-colors">
-              {t("nav.opportunities")}
+              Возможности
             </Link>
             <Link href="/courses" className="text-sm font-medium hover:text-primary transition-colors">
-              {t("nav.courses")}
+              Курсы
+            </Link>
+            <Link href="/roadmap" className="text-sm font-medium hover:text-primary transition-colors">
+              Твой путь
+            </Link>
+            <Link href="/profile/mbti" className="text-sm font-medium hover:text-primary transition-colors">
+              Личность
             </Link>
             <Link href="/shop" className="text-sm font-medium hover:text-primary transition-colors">
-              {t("nav.shop")}
+              Магазин
             </Link>
             <Link href="/leaderboard" className="text-sm font-medium hover:text-primary transition-colors">
-              {t("nav.leaderboard")}
-            </Link>
-            <Link href="/about-us" className="text-sm font-medium hover:text-primary transition-colors">
-              {t("nav.about")}
-            </Link>
-            <Link href="/features" className="text-sm font-medium hover:text-primary transition-colors">
-              {t("nav.features")}
-            </Link>
-            <Link href="/about" className="text-sm font-medium hover:text-primary transition-colors">
-              {t("footer.about_mentoria")}
+              Лидерборд
             </Link>
           </div>
 

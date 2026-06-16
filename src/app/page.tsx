@@ -54,37 +54,44 @@ export default function HomePage() {
                 className="text-sm font-medium hover:text-primary transition-colors"
                 onClick={(e) => handleProtectedClick(e, "/opportunities")}
               >
-                {t("nav.opportunities")}
+                Возможности
               </Link>
               <Link
                 href="/courses"
                 className="text-sm font-medium hover:text-primary transition-colors"
                 onClick={(e) => handleProtectedClick(e, "/courses")}
               >
-                {t("nav.courses")}
+                Курсы
               </Link>
+              {user && (
+                <>
+                  <Link
+                    href="/roadmap"
+                    className="text-sm font-medium hover:text-primary transition-colors"
+                  >
+                    Твой путь
+                  </Link>
+                  <Link
+                    href="/profile/mbti"
+                    className="text-sm font-medium hover:text-primary transition-colors"
+                  >
+                    Личность
+                  </Link>
+                </>
+              )}
               <Link
                 href="/shop"
                 className="text-sm font-medium hover:text-primary transition-colors"
                 onClick={(e) => handleProtectedClick(e, "/shop")}
               >
-                {t("nav.shop")}
+                Магазин
               </Link>
               <Link
                 href="/leaderboard"
                 className="text-sm font-medium hover:text-primary transition-colors"
                 onClick={(e) => handleProtectedClick(e, "/leaderboard")}
               >
-                {t("nav.leaderboard")}
-              </Link>
-              <Link href="/about-us" className="text-sm font-medium hover:text-primary transition-colors">
-                {t("nav.about")}
-              </Link>
-              <Link href="/features" className="text-sm font-medium hover:text-primary transition-colors">
-                {t("nav.features")}
-              </Link>
-              <Link href="/about" className="text-sm font-medium hover:text-primary transition-colors">
-                {t("footer.about_mentoria")}
+                Лидерборд
               </Link>
             </div>
 

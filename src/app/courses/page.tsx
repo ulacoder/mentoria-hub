@@ -12,7 +12,7 @@ import {
   Play,
   CheckCircle,
 } from "lucide-react";
-import { getAllCourses } from "@/lib/data";
+import { getAllEnhancedCourses } from "@/lib/courses-enhanced";
 import {
   enrollCourse,
   unenrollCourse,
@@ -25,7 +25,7 @@ import { StreakWidget } from "@/components/streak-widget";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/contexts/auth-context";
 
-const categories = ["Все", "Математика", "Английский язык", "Программирование", "Физика", "Экономика", "Подготовка к тестам", "Карьера", "Информатика"];
+const categories = ["Все", "Математика", "Английский", "Программирование", "Физика", "Экономика", "SAT/IELTS", "Информатика"];
 const levels = ["Все", "Начальный", "Средний", "Продвинутый"];
 
 export default function CoursesPage() {
@@ -35,7 +35,7 @@ export default function CoursesPage() {
   const [selectedLevel, setSelectedLevel] = useState("Все");
   const [enrolledCourses, setEnrolledCourses] = useState<number[]>([]);
 
-  const courses = getAllCourses();
+  const courses = getAllEnhancedCourses();
 
   useEffect(() => {
     if (!user) {
@@ -180,9 +180,17 @@ export default function CoursesPage() {
                   key={course.id}
                   className="bg-card border-2 border-accent/20 rounded-lg overflow-hidden hover:border-accent/50 transition-all group hover:shadow-lg hover:shadow-accent/10"
                 >
-                  {/* Course Image Placeholder */}
-                  <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center border-b-2 border-accent/20">
-                    <Play className="w-12 h-12 text-primary" />
+                  {/* Course Image */}
+                  <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center border-b-2 border-accent/20 overflow-hidden">
+                    {course.image ? (
+                      <img
+                        src={course.image}
+                        alt={course.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <Play className="w-12 h-12 text-primary" />
+                    )}
                   </div>
 
                   <div className="p-6">
@@ -210,7 +218,7 @@ export default function CoursesPage() {
                       </div>
                       <div className="flex items-center gap-1">
                         <BookOpen className="w-4 h-4" />
-                        <span>{course.lessons} уроков</span>
+                        <span>{course.totalLessons} уроков</span>
                       </div>
                     </div>
 
