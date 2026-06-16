@@ -73,5 +73,14 @@
     "contact_title": "Didn't find the answer?",
     "contact_subtitle": "Contact us — we're always happy to help!",
     "contact_button": "Write to Support"
+  },
+  "navi": {
+    "greeting": "Hi! 👋 I'm Navi — your personal AI mentor. Ask me anything about the platform, courses, or opportunities!",
+    "online": "Online",
+    "ai_mentor": "AI Mentor",
+    "placeholder": "Ask me something...",
+    "thinking": "Thinking...",
+    "hint": "Ask any questions — I'm here to help! 💡",
+    "click_to_chat": "Hi! I'm Navi 👋\nClick to chat!"
   }
 }
