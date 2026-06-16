@@ -1,0 +1,77 @@
+{
+  "nav": {
+    "opportunities": "Opportunities",
+    "courses": "Courses",
+    "leaderboard": "Leaderboard",
+    "faq": "FAQ",
+    "about": "About Us",
+    "features": "Features",
+    "shop": "Shop",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard"
+  },
+  "home": {
+    "hero_title": "Find opportunities\nand grow at your own pace",
+    "hero_subtitle": "A unified platform for finding scholarships, competitions, olympiads, and summer programs. Take courses online when it's convenient — no schedule constraints.",
+    "find_opportunities": "Find Opportunities",
+    "view_courses": "View Courses",
+    "platform_badge": "Educational Platform",
+    "stats": {
+      "opportunities": "Opportunities",
+      "courses": "Courses",
+      "students": "Students"
+    },
+    "features_title": "What's on the platform",
+    "features_subtitle": "Opportunities and courses in one place",
+    "cta_title": "Start searching for opportunities today",
+    "cta_subtitle": "Registration takes less than a minute. Get access to all opportunities and courses.",
+    "cta_button": "Create Free Account"
+  },
+  "features": {
+    "competitions": "Competitions and Olympiads",
+    "competitions_desc": "Business competitions, science olympiads, hackathons and international contests",
+    "scholarships": "Scholarships and Grants",
+    "scholarships_desc": "Scholarships, grants for education and project funding",
+    "summer_programs": "Summer Programs",
+    "summer_programs_desc": "International summer schools, camps and research programs",
+    "async_courses": "Asynchronous Courses",
+    "async_courses_desc": "Math, English, SAT/IELTS, programming — learn at your own pace",
+    "recommendations": "Personal Recommendations",
+    "recommendations_desc": "The platform suggests opportunities based on your interests and goals",
+    "progress_tracking": "Progress Tracking",
+    "progress_tracking_desc": "Track deadlines, save opportunities and monitor course progress"
+  },
+  "footer": {
+    "description": "Platform for finding educational opportunities and asynchronous learning for grades 8-11 students.",
+    "platform": "Platform",
+    "about": "About",
+    "about_mentoria": "About Mentoria",
+    "contacts": "Contacts",
+    "support": "Support",
+    "copyright": "© 2026 Mentoria Hub. All rights reserved."
+  },
+  "shop": {
+    "title": "Coin Shop",
+    "subtitle": "Spend coins on merch, profile upgrades and premium courses",
+    "balance": "Your balance",
+    "categories": {
+      "all": "All",
+      "merch": "Merch",
+      "profile": "Profile",
+      "courses": "Courses",
+      "extras": "Extras"
+    },
+    "buy": "Buy",
+    "purchased": "Purchased"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Answers to popular questions about the platform, courses and opportunities",
+    "search_placeholder": "Search questions...",
+    "no_results": "No results found for your query. Try different keywords.",
+    "contact_title": "Didn't find the answer?",
+    "contact_subtitle": "Contact us — we're always happy to help!",
+    "contact_button": "Write to Support"
+  }
+}

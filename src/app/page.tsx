@@ -17,6 +17,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/contexts/auth-context";
 import { AuthModal } from "@/components/auth-modal";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 export default function HomePage() {
   const { user, logout } = useAuth();
@@ -79,6 +80,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-3">
+              <LanguageSwitcher />
               <ThemeToggle />
               {user ? (
                 <>

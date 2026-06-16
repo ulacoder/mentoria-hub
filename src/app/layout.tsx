@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Space_Grotesk, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/auth-context";
+import { LocaleProvider } from "@/contexts/locale-context";
+import { NaviMentor } from "@/components/navi-mentor";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-heading",
@@ -34,7 +36,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans">
-        <AuthProvider>{children}</AuthProvider>
+        <LocaleProvider>
+          <AuthProvider>
+            {children}
+            <NaviMentor />
+          </AuthProvider>
+        </LocaleProvider>
       </body>
     </html>
   );
