@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { X, Send, Minimize2, Maximize2, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth-context";
-import { useTranslations } from "next-intl";
+import { useLocale } from "@/contexts/locale-context";
 
 interface Message {
   role: "user" | "navi";
@@ -14,14 +14,14 @@ interface Message {
 
 export function NaviMentor() {
   const { user } = useAuth();
-  const t = useTranslations("navi");
+  const { t } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "navi",
-      content: t("greeting"),
+      content: t("navi.greeting"),
       timestamp: new Date()
     }
   ]);
@@ -126,7 +126,7 @@ export function NaviMentor() {
           <div className="absolute bottom-full right-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             <div className="bg-card border-2 border-primary/40 rounded-lg p-3 shadow-xl max-w-xs">
               <p className="text-sm font-medium whitespace-pre-line">
-                {t("click_to_chat")}
+                {t("navi.click_to_chat")}
               </p>
             </div>
           </div>
@@ -154,7 +154,7 @@ export function NaviMentor() {
           </div>
           <div>
             <h3 className="font-heading font-bold">Navi</h3>
-            <p className="text-xs text-muted-foreground">{t("ai_mentor")} • {t("online")}</p>
+            <p className="text-xs text-muted-foreground">{t("navi.ai_mentor")} • {t("navi.online")}</p>
           </div>
         </div>
 
@@ -208,7 +208,7 @@ export function NaviMentor() {
               <div className="flex justify-start">
                 <div className="bg-muted rounded-lg p-3 flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin text-primary" />
-                  <span className="text-sm text-muted-foreground">{t("thinking")}</span>
+                  <span className="text-sm text-muted-foreground">{t("navi.thinking")}</span>
                 </div>
               </div>
             )}
@@ -223,7 +223,7 @@ export function NaviMentor() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && !isLoading && handleSend()}
-                placeholder={t("placeholder")}
+                placeholder={t("navi.placeholder")}
                 disabled={isLoading}
                 className="flex-1 px-3 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm disabled:opacity-50"
               />
@@ -241,7 +241,7 @@ export function NaviMentor() {
               </Button>
             </div>
             <p className="text-xs text-muted-foreground mt-2 text-center">
-              {t("hint")}
+              {t("navi.hint")}
             </p>
           </div>
         </>
