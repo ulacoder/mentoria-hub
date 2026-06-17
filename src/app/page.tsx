@@ -13,15 +13,12 @@ import {
   Award,
   Zap,
 } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { Logo } from "@/components/logo";
 import { useAuth } from "@/contexts/auth-context";
 import { AuthModal } from "@/components/auth-modal";
-import { LanguageSwitcher } from "@/components/language-switcher";
 import { useLocale } from "@/contexts/locale-context";
 
 export default function HomePage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { t } = useLocale();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [redirectTo, setRedirectTo] = useState<string | undefined>();
@@ -41,89 +38,6 @@ export default function HomePage() {
         onClose={() => setShowAuthModal(false)}
         redirectTo={redirectTo}
       />
-
-      {/* Navigation */}
-      <nav className="border-b border-border/40 backdrop-blur-sm sticky top-0 z-50 bg-background/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Logo />
-
-            <div className="hidden md:flex items-center gap-6">
-              <Link
-                href="/opportunities"
-                className="text-sm font-medium hover:text-primary transition-colors"
-                onClick={(e) => handleProtectedClick(e, "/opportunities")}
-              >
-                Возможности
-              </Link>
-              <Link
-                href="/courses"
-                className="text-sm font-medium hover:text-primary transition-colors"
-                onClick={(e) => handleProtectedClick(e, "/courses")}
-              >
-                Курсы
-              </Link>
-              {user && (
-                <>
-                  <Link
-                    href="/roadmap"
-                    className="text-sm font-medium hover:text-primary transition-colors"
-                  >
-                    Твой путь
-                  </Link>
-                  <Link
-                    href="/profile/mbti"
-                    className="text-sm font-medium hover:text-primary transition-colors"
-                  >
-                    Личность
-                  </Link>
-                </>
-              )}
-              <Link
-                href="/shop"
-                className="text-sm font-medium hover:text-primary transition-colors"
-                onClick={(e) => handleProtectedClick(e, "/shop")}
-              >
-                Магазин
-              </Link>
-              <Link
-                href="/leaderboard"
-                className="text-sm font-medium hover:text-primary transition-colors"
-                onClick={(e) => handleProtectedClick(e, "/leaderboard")}
-              >
-                Лидерборд
-              </Link>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <LanguageSwitcher />
-              <ThemeToggle />
-              {user ? (
-                <>
-                  <Link href="/dashboard">
-                    <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-lg">
-                      <Zap className="w-4 h-4 text-primary" />
-                      <span className="text-sm font-semibold">{user.coins}</span>
-                    </div>
-                  </Link>
-                  <Button variant="ghost" size="sm" onClick={logout}>
-                    {user.name}
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button variant="ghost" size="sm" onClick={() => setShowAuthModal(true)}>
-                    {t("nav.login")}
-                  </Button>
-                  <Button size="sm" className="bg-primary hover:bg-primary/90" onClick={() => setShowAuthModal(true)}>
-                    {t("nav.register")}
-                  </Button>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
 
       {/* Hero Section */}
       <section className="pt-16 pb-24">

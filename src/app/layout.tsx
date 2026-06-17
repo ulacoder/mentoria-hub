@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/auth-context";
 import { LocaleProvider } from "@/contexts/locale-context";
 import { NaviMentor } from "@/components/navi-mentor";
+import { Navbar } from "@/components/navbar";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-heading",
@@ -38,7 +39,10 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans">
         <LocaleProvider>
           <AuthProvider>
-            {children}
+            <Navbar />
+            <main className="flex-1">
+              {children}
+            </main>
             <NaviMentor />
           </AuthProvider>
         </LocaleProvider>

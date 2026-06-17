@@ -1,5 +1,4 @@
 "use client";
-import { Navbar } from "@/components/navbar";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";

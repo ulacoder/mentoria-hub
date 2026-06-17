@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Navbar } from "@/components/navbar";
 import { useAuth } from "@/contexts/auth-context";
 import { useLocale } from "@/contexts/locale-context";
 import { Target, MapPin, Award, TrendingUp, Loader2, CheckCircle2, Circle, Star, Trophy, Lightbulb } from "lucide-react";
@@ -116,8 +115,6 @@ export default function RoadmapPage() {
   if (step === "form") {
     return (
       <div className="flex flex-col min-h-screen">
-        <Navbar />
-
         <div className="flex-1 bg-muted/20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="mb-8">
@@ -272,8 +269,6 @@ export default function RoadmapPage() {
   // Roadmap view
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
-
       <div className="flex-1 bg-gradient-to-br from-primary/5 via-background to-accent/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Header with character */}

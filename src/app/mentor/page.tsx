@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
 import { RequireRole } from "@/components/require-role";
-import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
   Users,
@@ -40,8 +39,6 @@ export default function MentorDashboardPage() {
   return (
     <RequireRole role="mentor">
       <div className="flex flex-col min-h-screen">
-        <Navbar />
-
         <div className="flex-1 bg-muted/20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="mb-8">
@@ -117,11 +114,6 @@ export default function MentorDashboardPage() {
                 )}
               </div>
             )}
-                  <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>Пока нет студентов</p>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </div>

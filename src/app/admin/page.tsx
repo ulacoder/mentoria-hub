@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
 import { RequireRole } from "@/components/require-role";
-import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
   Users,
@@ -53,8 +52,6 @@ export default function AdminDashboardPage() {
   return (
     <RequireRole role="admin">
       <div className="flex flex-col min-h-screen">
-        <Navbar />
-
         <div className="flex-1 bg-muted/20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             {/* Header */}

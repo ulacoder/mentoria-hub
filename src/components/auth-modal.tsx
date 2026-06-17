@@ -61,10 +61,13 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
       );
       if (success) {
         onClose();
-        if (redirectTo) {
+        // Redirect students to profile setup
+        if (formData.role === "student") {
+          router.push("/profile/setup");
+        } else if (redirectTo) {
           router.push(redirectTo);
         } else {
-          router.refresh();
+          router.push("/dashboard");
         }
       } else {
         setError("Пользователь с таким email уже существует");
@@ -81,8 +84,8 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-card border border-border/60 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto m-4">
+    <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 backdrop-blur-sm overflow-y-auto p-4 sm:p-6">
+      <div className="bg-card border border-border/60 rounded-lg w-full max-w-md my-auto">
         <div className="sticky top-0 bg-card border-b border-border/40 p-4 flex items-center justify-between">
           <h2 className="text-xl font-heading font-bold">
             {mode === "login" ? "Вход в аккаунт" : "Регистрация"}
@@ -130,6 +133,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
                   >
                     <div className="text-2xl mb-1">🎓</div>
                     <div className="text-xs font-medium">Студент</div>
+                    <div className="text-[10px] text-muted-foreground mt-1">Учусь и развиваюсь</div>
                   </button>
                   <button
                     type="button"
@@ -142,6 +146,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
                   >
                     <div className="text-2xl mb-1">👨‍🏫</div>
                     <div className="text-xs font-medium">Ментор</div>
+                    <div className="text-[10px] text-muted-foreground mt-1">Помогаю студентам</div>
                   </button>
                   <button
                     type="button"
@@ -154,6 +159,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
                   >
                     <div className="text-2xl mb-1">⚙️</div>
                     <div className="text-xs font-medium">Админ</div>
+                    <div className="text-[10px] text-muted-foreground mt-1">Управляю платформой</div>
                   </button>
                 </div>
               </div>
