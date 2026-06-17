@@ -30,6 +30,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Initialize default accounts (mentor & admin)
+    initializeDefaultAccounts();
+
     // Check localStorage for existing user session
     const storedUser = localStorage.getItem("mentoria_user");
     if (storedUser) {
@@ -42,6 +45,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     setIsLoading(false);
   }, []);
+
+  const initializeDefaultAccounts = () => {
+    const existingUsers = JSON.parse(localStorage.getItem("mentoria_users") || "[]");
+    const userProfiles = JSON.parse(localStorage.getItem("mentoria_user_profiles") || "{}");
+
+    // Check if default accounts already exist
+    const mentorExists = existingUsers.some((u: any) => u.email === "mentor@mentoria.kz");
+    const adminExists = existingUsers.some((u: any) => u.email === "admin@mentoria.kz");
+
+    if (!mentorExists) {
+      const mentorUser: User = {
+        id: "mentor_001",
+        name: "Ментор",
+        email: "mentor@mentoria.kz",
+        grade: "—",
+        interests: ["Образование", "Менторство"],
+        coins: 500,
+        rank: 0,
+        role: "mentor",
+      };
+
+      existingUsers.push({
+        email: "mentor@mentoria.kz",
+        password: "mentor123",
+        userId: "mentor_001",
+      });
+
+      userProfiles["mentor_001"] = mentorUser;
+    }
+
+    if (!adminExists) {
+      const adminUser: User = {
+        id: "admin_001",
+        name: "Администратор",
+        email: "admin@mentoria.kz",
+        grade: "—",
+        interests: ["Администрирование"],
+        coins: 1000,
+        rank: 0,
+        role: "admin",
+      };
+
+      existingUsers.push({
+        email: "admin@mentoria.kz",
+        password: "admin123",
+        userId: "admin_001",
+      });
+
+      userProfiles["admin_001"] = adminUser;
+    }
+
+    localStorage.setItem("mentoria_users", JSON.stringify(existingUsers));
+    localStorage.setItem("mentoria_user_profiles", JSON.stringify(userProfiles));
+  };
 
   const register = async (
     name: string,

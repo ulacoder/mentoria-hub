@@ -44,6 +44,16 @@ export function Navbar() {
             <Link href="/leaderboard" className="text-sm font-medium hover:text-primary transition-colors">
               Лидерборд
             </Link>
+            {user?.role === "mentor" && (
+              <Link href="/mentor" className="text-sm font-medium hover:text-primary transition-colors">
+                Ученики
+              </Link>
+            )}
+            {user?.role === "admin" && (
+              <Link href="/admin" className="text-sm font-medium hover:text-primary transition-colors">
+                Админ панель
+              </Link>
+            )}
           </div>
 
           <div className="flex items-center gap-3">

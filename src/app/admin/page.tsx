@@ -4,193 +4,167 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
 import { RequireRole } from "@/components/require-role";
-import { AdminNavbar } from "@/components/admin-navbar";
+import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
   Users,
   BookOpen,
-  Trophy,
-  Award,
-  TrendingUp,
-  Activity,
-  DollarSign,
-  UserCheck
+  Settings,
+  Trash2,
+  Edit
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
   const { user } = useAuth();
-  const [stats, setStats] = useState({
-    totalUsers: 0,
-    totalStudents: 0,
-    totalMentors: 0,
-    totalCourses: 3, // Hardcoded for now
-    totalOpportunities: 0,
-    totalCoins: 0,
-    activeUsers: 0
-  });
+  const [activeTab, setActiveTab] = useState<"users" | "courses" | "moderation">("users");
+  const [users, setUsers] = useState<any[]>([]);
 
   useEffect(() => {
     if (user && user.role === "admin") {
-      loadStats();
+      loadUsers();
     }
   }, [user]);
 
-  const loadStats = () => {
+  const loadUsers = () => {
     if (typeof window === "undefined") return;
+    const allUsers = JSON.parse(localStorage.getItem("mentoria_users") || "[]");
+    setUsers(allUsers);
+  };
 
-    const users = JSON.parse(localStorage.getItem("mentoria_users") || "[]");
-    const students = users.filter((u: any) => u.role === "student");
-    const mentors = users.filter((u: any) => u.role === "mentor");
-    const totalCoins = users.reduce((sum: number, u: any) => sum + (u.coins || 0), 0);
-
-    // Count active users (those with progress)
-    const progress = JSON.parse(localStorage.getItem("mentoria_user_progress") || "{}");
-    const activeUsers = users.filter((u: any) => {
-      const userProgress = progress[u.id];
-      return userProgress?.enrolledCourses?.length > 0;
-    }).length;
-
-    setStats({
-      totalUsers: users.length,
-      totalStudents: students.length,
-      totalMentors: mentors.length,
-      totalCourses: 3,
-      totalOpportunities: 0,
-      totalCoins,
-      activeUsers
-    });
+  const deleteUser = (userId: string) => {
+    if (confirm("Удалить этого пользователя?")) {
+      const filtered = users.filter(u => u.id !== userId);
+      localStorage.setItem("mentoria_users", JSON.stringify(filtered));
+      loadUsers();
+    }
   };
 
   return (
     <RequireRole role="admin">
       <div className="flex flex-col min-h-screen">
-        <AdminNavbar />
+        <Navbar />
 
         <div className="flex-1 bg-muted/20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             {/* Header */}
             <div className="mb-8">
-              <h1 className="text-3xl font-heading font-bold mb-2">Панель администратора</h1>
+              <h1 className="text-3xl font-heading font-bold mb-2">Админ панель</h1>
               <p className="text-muted-foreground">
                 Управление платформой Mentoria Hub
               </p>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-card border border-border/60 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <Users className="w-5 h-5 text-blue-500" />
-                  <span className="text-2xl font-bold">{stats.totalUsers}</span>
-                </div>
-                <p className="text-sm text-muted-foreground">Всего пользователей</p>
-              </div>
-
-              <div className="bg-card border border-border/60 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <UserCheck className="w-5 h-5 text-green-500" />
-                  <span className="text-2xl font-bold">{stats.totalStudents}</span>
-                </div>
-                <p className="text-sm text-muted-foreground">Студентов</p>
-              </div>
-
-              <div className="bg-card border border-border/60 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <Activity className="w-5 h-5 text-purple-500" />
-                  <span className="text-2xl font-bold">{stats.totalMentors}</span>
-                </div>
-                <p className="text-sm text-muted-foreground">Менторов</p>
-              </div>
-
-              <div className="bg-card border border-border/60 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <TrendingUp className="w-5 h-5 text-orange-500" />
-                  <span className="text-2xl font-bold">{stats.activeUsers}</span>
-                </div>
-                <p className="text-sm text-muted-foreground">Активных</p>
-              </div>
+            {/* Tabs */}
+            <div className="flex gap-2 mb-6 border-b border-border">
+              <button
+                onClick={() => setActiveTab("users")}
+                className={`px-4 py-2 font-medium transition-colors ${
+                  activeTab === "users"
+                    ? "text-primary border-b-2 border-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Users className="w-4 h-4 inline mr-2" />
+                Пользователи
+              </button>
+              <button
+                onClick={() => setActiveTab("courses")}
+                className={`px-4 py-2 font-medium transition-colors ${
+                  activeTab === "courses"
+                    ? "text-primary border-b-2 border-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <BookOpen className="w-4 h-4 inline mr-2" />
+                Курсы
+              </button>
+              <button
+                onClick={() => setActiveTab("moderation")}
+                className={`px-4 py-2 font-medium transition-colors ${
+                  activeTab === "moderation"
+                    ? "text-primary border-b-2 border-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Settings className="w-4 h-4 inline mr-2" />
+                Модерация
+              </button>
             </div>
 
-            {/* Content Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-card border border-border/60 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <BookOpen className="w-5 h-5 text-primary" />
-                  <span className="text-2xl font-bold">{stats.totalCourses}</span>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">Курсов на платформе</p>
-                <Button
-                  size="sm"
-                  className="w-full"
-                  onClick={() => router.push("/admin/courses")}
-                >
-                  Управление курсами
-                </Button>
-              </div>
+            {/* Users Table */}
+            {activeTab === "users" && (
+              <div className="bg-card border rounded-lg overflow-hidden">
+                <table className="w-full">
+                  <thead className="bg-muted/50">
+                    <tr>
+                      <th className="text-left px-6 py-3 text-sm font-semibold">Имя</th>
+                      <th className="text-left px-6 py-3 text-sm font-semibold">Email</th>
+                      <th className="text-left px-6 py-3 text-sm font-semibold">Роль</th>
+                      <th className="text-left px-6 py-3 text-sm font-semibold">Класс</th>
+                      <th className="text-left px-6 py-3 text-sm font-semibold">Коины</th>
+                      <th className="text-right px-6 py-3 text-sm font-semibold">Действия</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {users.map((u) => (
+                      <tr key={u.id} className="hover:bg-muted/20">
+                        <td className="px-6 py-4 text-sm">{u.name}</td>
+                        <td className="px-6 py-4 text-sm text-muted-foreground">{u.email}</td>
+                        <td className="px-6 py-4">
+                          <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                            u.role === "admin" ? "bg-red-500/20 text-red-500" :
+                            u.role === "mentor" ? "bg-blue-500/20 text-blue-500" :
+                            "bg-green-500/20 text-green-500"
+                          }`}>
+                            {u.role}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm">{u.grade || "—"}</td>
+                        <td className="px-6 py-4 text-sm">{u.coins || 0}</td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button size="sm" variant="ghost">
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => deleteUser(u.id)}
+                            >
+                              <Trash2 className="w-4 h-4 text-red-500" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
 
-              <div className="bg-card border border-border/60 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <Trophy className="w-5 h-5 text-yellow-500" />
-                  <span className="text-2xl font-bold">{stats.totalOpportunities}</span>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">Возможностей</p>
-                <Button
-                  size="sm"
-                  className="w-full"
-                  onClick={() => router.push("/admin/opportunities")}
-                >
-                  Управление возможностями
-                </Button>
+                {users.length === 0 && (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p>Пока нет пользователей</p>
+                  </div>
+                )}
               </div>
+            )}
 
-              <div className="bg-card border border-border/60 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <Award className="w-5 h-5 text-yellow-500" />
-                  <span className="text-2xl font-bold">{stats.totalCoins}</span>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">Коинов в системе</p>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => router.push("/admin/analytics")}
-                >
-                  Подробная аналитика
-                </Button>
+            {/* Courses Placeholder */}
+            {activeTab === "courses" && (
+              <div className="bg-card border rounded-lg p-12 text-center text-muted-foreground">
+                <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                <p>Управление курсами скоро будет доступно</p>
               </div>
-            </div>
+            )}
 
-            {/* Quick Actions */}
-            <div className="bg-card border border-border/60 rounded-lg p-6">
-              <h2 className="text-xl font-heading font-bold mb-4">Быстрые действия</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => router.push("/admin/courses")}
-                  className="justify-start"
-                >
-                  <BookOpen className="w-4 h-4 mr-2" />
-                  Добавить курс
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => router.push("/admin/opportunities")}
-                  className="justify-start"
-                >
-                  <Trophy className="w-4 h-4 mr-2" />
-                  Добавить возможность
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => router.push("/admin/users")}
-                  className="justify-start"
-                >
-                  <Users className="w-4 h-4 mr-2" />
-                  Управление пользователями
-                </Button>
+            {/* Moderation Placeholder */}
+            {activeTab === "moderation" && (
+              <div className="bg-card border rounded-lg p-12 text-center text-muted-foreground">
+                <Settings className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                <p>Модерация скоро будет доступна</p>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

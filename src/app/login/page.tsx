@@ -126,6 +126,21 @@ export default function LoginPage() {
               </Button>
             </form>
 
+            {/* Test Accounts */}
+            <div className="mt-6 p-4 bg-muted/50 rounded-lg border border-border/40">
+              <p className="text-xs font-semibold mb-2 text-muted-foreground">Тестовые аккаунты:</p>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Ментор:</span>
+                  <code className="bg-background px-2 py-1 rounded text-primary">mentor@mentoria.kz / mentor123</code>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Админ:</span>
+                  <code className="bg-background px-2 py-1 rounded text-primary">admin@mentoria.kz / admin123</code>
+                </div>
+              </div>
+            </div>
+
             <div className="mt-6 text-center text-sm text-muted-foreground">
               Нет аккаунта?{" "}
               <Link href="/register" className="text-primary hover:underline font-medium">
