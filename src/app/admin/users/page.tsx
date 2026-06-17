@@ -48,11 +48,11 @@ export default function AdminUsersPage() {
   const handleChangeRole = (userId: string, newRole: "student" | "mentor" | "admin") => {
     const users = JSON.parse(localStorage.getItem("mentoria_users") || "[]");
     const updatedUsers = users.map((u: any) =>
-      u.userId === userId ? { ...u, role: newRole } : u
+      u.id === userId ? { ...u, role: newRole } : u
     );
     localStorage.setItem("mentoria_users", JSON.stringify(updatedUsers));
     loadUsers();
-    if (selectedUser?.userId === userId) {
+    if (selectedUser?.id === userId) {
       setSelectedUser({ ...selectedUser, role: newRole });
     }
   };
@@ -61,10 +61,10 @@ export default function AdminUsersPage() {
     if (!confirm("Точно удалить этого пользователя?")) return;
 
     const users = JSON.parse(localStorage.getItem("mentoria_users") || "[]");
-    const updatedUsers = users.filter((u: any) => u.userId !== userId);
+    const updatedUsers = users.filter((u: any) => u.id !== userId);
     localStorage.setItem("mentoria_users", JSON.stringify(updatedUsers));
     loadUsers();
-    if (selectedUser?.userId === userId) {
+    if (selectedUser?.id === userId) {
       setSelectedUser(null);
     }
   };
@@ -116,14 +116,14 @@ export default function AdminUsersPage() {
                 <div className="space-y-3">
                   {filteredUsers.map((u) => {
                     const progress = JSON.parse(localStorage.getItem("mentoria_user_progress") || "{}");
-                    const userProgress = progress[u.userId];
+                    const userProgress = progress[u.id];
                     const enrolledCount = userProgress?.enrolledCourses?.length || 0;
 
                     return (
                       <div
-                        key={u.userId}
+                        key={u.id}
                         className={`bg-card border-2 rounded-lg p-4 cursor-pointer transition-all ${
-                          selectedUser?.userId === u.userId
+                          selectedUser?.id === u.id
                             ? "border-primary"
                             : "border-border/60 hover:border-primary/50"
                         }`}
@@ -201,7 +201,7 @@ export default function AdminUsersPage() {
                           <span className="text-muted-foreground">Коины:</span> {selectedUser.coins || 0}
                         </div>
                         <div>
-                          <span className="text-muted-foreground">ID:</span> <span className="text-xs font-mono">{selectedUser.userId}</span>
+                          <span className="text-muted-foreground">ID:</span> <span className="text-xs font-mono">{selectedUser.id}</span>
                         </div>
                       </div>
                     </div>
@@ -222,7 +222,7 @@ export default function AdminUsersPage() {
                           size="sm"
                           variant={selectedUser.role === "student" ? "default" : "outline"}
                           className="w-full justify-start"
-                          onClick={() => handleChangeRole(selectedUser.userId, "student")}
+                          onClick={() => handleChangeRole(selectedUser.id, "student")}
                         >
                           <UserCheck className="w-4 h-4 mr-2" />
                           Студент
@@ -231,7 +231,7 @@ export default function AdminUsersPage() {
                           size="sm"
                           variant={selectedUser.role === "mentor" ? "default" : "outline"}
                           className="w-full justify-start"
-                          onClick={() => handleChangeRole(selectedUser.userId, "mentor")}
+                          onClick={() => handleChangeRole(selectedUser.id, "mentor")}
                         >
                           <Shield className="w-4 h-4 mr-2" />
                           Ментор
@@ -240,7 +240,7 @@ export default function AdminUsersPage() {
                           size="sm"
                           variant={selectedUser.role === "admin" ? "default" : "outline"}
                           className="w-full justify-start"
-                          onClick={() => handleChangeRole(selectedUser.userId, "admin")}
+                          onClick={() => handleChangeRole(selectedUser.id, "admin")}
                         >
                           <Crown className="w-4 h-4 mr-2" />
                           Администратор
@@ -252,7 +252,7 @@ export default function AdminUsersPage() {
                       variant="destructive"
                       size="sm"
                       className="w-full"
-                      onClick={() => handleDeleteUser(selectedUser.userId)}
+                      onClick={() => handleDeleteUser(selectedUser.id)}
                     >
                       <UserX className="w-4 h-4 mr-2" />
                       Удалить пользователя

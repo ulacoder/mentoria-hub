@@ -68,7 +68,7 @@ export default function MentorDashboardPage() {
                     {students.filter(s => {
                       // Active if has enrolled courses
                       const progress = JSON.parse(localStorage.getItem("mentoria_user_progress") || "{}");
-                      return progress[s.userId]?.enrolledCourses?.length > 0;
+                      return progress[s.id]?.enrolledCourses?.length > 0;
                     }).length}
                   </span>
                 </div>
@@ -103,18 +103,18 @@ export default function MentorDashboardPage() {
                 <div className="space-y-3">
                   {students.map((student) => {
                     const progress = JSON.parse(localStorage.getItem("mentoria_user_progress") || "{}");
-                    const studentProgress = progress[student.userId];
+                    const studentProgress = progress[student.id];
                     const enrolledCount = studentProgress?.enrolledCourses?.length || 0;
 
                     return (
                       <div
-                        key={student.userId}
+                        key={student.id}
                         className={`bg-card border-2 rounded-lg p-4 cursor-pointer transition-all ${
-                          selectedStudent?.userId === student.userId
+                          selectedStudent?.id === student.id
                             ? "border-primary"
                             : "border-border/60 hover:border-primary/50"
                         }`}
-                        onClick={() => router.push(`/mentor/student/${student.userId}`)}
+                        onClick={() => router.push(`/mentor/student/${student.id}`)}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">

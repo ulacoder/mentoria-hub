@@ -44,7 +44,7 @@ export default function MathGamePage() {
     }
 
     // Load best score
-    const saved = localStorage.getItem(`math_game_best_${user.userId}`);
+    const saved = localStorage.getItem(`math_game_best_${user.id}`);
     if (saved) {
       setBestScore(parseInt(saved));
     }
@@ -141,7 +141,7 @@ export default function MathGamePage() {
     // Save best score
     if (score > bestScore) {
       setBestScore(score);
-      localStorage.setItem(`math_game_best_${user!.userId}`, score.toString());
+      localStorage.setItem(`math_game_best_${user!.id}`, score.toString());
     }
   };
 

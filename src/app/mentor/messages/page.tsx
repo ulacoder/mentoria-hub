@@ -62,12 +62,12 @@ export default function MentorMessagesPage() {
     const convs: Conversation[] = students.map((student: any) => {
       const studentMessages = allMessages.filter(
         (m: Message) =>
-          (m.from === student.userId && m.to === user!.userId) ||
-          (m.from === user!.userId && m.to === student.userId)
+          (m.from === student.id && m.to === user!.id) ||
+          (m.from === user!.id && m.to === student.id)
       );
 
       const unread = studentMessages.filter(
-        (m: Message) => m.from === student.userId && !m.read
+        (m: Message) => m.from === student.id && !m.read
       ).length;
 
       const lastMsg = studentMessages.sort(
@@ -76,7 +76,7 @@ export default function MentorMessagesPage() {
       )[0];
 
       return {
-        userId: student.userId,
+        userId: student.id,
         userName: student.name,
         userMbti: student.mbti,
         lastMessage: lastMsg,
@@ -101,8 +101,8 @@ export default function MentorMessagesPage() {
     const allMessages = JSON.parse(localStorage.getItem("mentoria_messages") || "[]");
     const conversationMessages = allMessages.filter(
       (m: Message) =>
-        (m.from === studentId && m.to === user!.userId) ||
-        (m.from === user!.userId && m.to === studentId)
+        (m.from === studentId && m.to === user!.id) ||
+        (m.from === user!.id && m.to === studentId)
     );
 
     conversationMessages.sort(
@@ -114,7 +114,7 @@ export default function MentorMessagesPage() {
 
     // Mark messages as read
     const updatedMessages = allMessages.map((m: Message) =>
-      m.from === studentId && m.to === user!.userId ? { ...m, read: true } : m
+      m.from === studentId && m.to === user!.id ? { ...m, read: true } : m
     );
     localStorage.setItem("mentoria_messages", JSON.stringify(updatedMessages));
     loadConversations(); // Refresh unread counts
@@ -125,7 +125,7 @@ export default function MentorMessagesPage() {
 
     const message: Message = {
       id: `msg_${Date.now()}`,
-      from: user!.userId,
+      from: user!.id,
       to: selectedConversation.userId,
       content: newMessage.trim(),
       timestamp: new Date().toISOString(),
@@ -251,7 +251,7 @@ export default function MentorMessagesPage() {
                     {/* Messages */}
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
                       {messages.map((msg) => {
-                        const isFromMentor = msg.from === user!.userId;
+                        const isFromMentor = msg.from === user!.id;
                         return (
                           <div
                             key={msg.id}

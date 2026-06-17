@@ -39,7 +39,7 @@ export default function StudentMessagesPage() {
 
   useEffect(() => {
     if (selectedMentor) {
-      loadMessages(selectedMentor.userId);
+      loadMessages(selectedMentor.id);
     }
   }, [selectedMentor]);
 
@@ -59,8 +59,8 @@ export default function StudentMessagesPage() {
     const allMessages = JSON.parse(localStorage.getItem("mentoria_messages") || "[]");
     const conversationMessages = allMessages.filter(
       (m: Message) =>
-        (m.from === mentorId && m.to === user!.userId) ||
-        (m.from === user!.userId && m.to === mentorId)
+        (m.from === mentorId && m.to === user!.id) ||
+        (m.from === user!.id && m.to === mentorId)
     );
 
     conversationMessages.sort(
@@ -72,7 +72,7 @@ export default function StudentMessagesPage() {
 
     // Mark messages as read
     const updatedMessages = allMessages.map((m: Message) =>
-      m.from === mentorId && m.to === user!.userId ? { ...m, read: true } : m
+      m.from === mentorId && m.to === user!.id ? { ...m, read: true } : m
     );
     localStorage.setItem("mentoria_messages", JSON.stringify(updatedMessages));
   };
@@ -82,8 +82,8 @@ export default function StudentMessagesPage() {
 
     const message: Message = {
       id: `msg_${Date.now()}`,
-      from: user!.userId,
-      to: selectedMentor.userId,
+      from: user!.id,
+      to: selectedMentor.id,
       content: newMessage.trim(),
       timestamp: new Date().toISOString(),
       read: false
@@ -101,7 +101,7 @@ export default function StudentMessagesPage() {
     if (typeof window === "undefined") return 0;
     const allMessages = JSON.parse(localStorage.getItem("mentoria_messages") || "[]");
     return allMessages.filter(
-      (m: Message) => m.from === mentorId && m.to === user!.userId && !m.read
+      (m: Message) => m.from === mentorId && m.to === user!.id && !m.read
     ).length;
   };
 
@@ -130,13 +130,13 @@ export default function StudentMessagesPage() {
 
                 <div className="overflow-y-auto max-h-[600px]">
                   {mentors.map((mentor) => {
-                    const unread = getUnreadCount(mentor.userId);
+                    const unread = getUnreadCount(mentor.id);
                     return (
                       <div
-                        key={mentor.userId}
+                        key={mentor.id}
                         onClick={() => setSelectedMentor(mentor)}
                         className={`p-4 cursor-pointer transition-all border-b ${
-                          selectedMentor?.userId === mentor.userId
+                          selectedMentor?.id === mentor.id
                             ? "bg-primary/10"
                             : "hover:bg-muted/50"
                         }`}
@@ -182,7 +182,7 @@ export default function StudentMessagesPage() {
                   {/* Messages */}
                   <div className="flex-1 overflow-y-auto p-4 space-y-4">
                     {messages.map((msg) => {
-                      const isFromStudent = msg.from === user.userId;
+                      const isFromStudent = msg.from === user.id;
                       return (
                         <div
                           key={msg.id}

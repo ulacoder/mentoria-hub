@@ -268,3 +268,11 @@ export function getCourseById(id: number): EnhancedCourse | undefined {
 export function getAllEnhancedCourses(): EnhancedCourse[] {
   return enhancedCoursesData;
 }
+
+// Alias for compatibility
+export function getCourses(): EnhancedCourse[] {
+  return enhancedCoursesData;
+}
+
+// Type alias for compatibility
+export type Course = EnhancedCourse;
