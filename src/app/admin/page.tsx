@@ -19,6 +19,7 @@ export default function AdminDashboardPage() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<"users" | "courses" | "moderation">("users");
   const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user && user.role === "admin") {
@@ -26,17 +27,26 @@ export default function AdminDashboardPage() {
     }
   }, [user]);
 
-  const loadUsers = () => {
-    if (typeof window === "undefined") return;
-    const allUsers = JSON.parse(localStorage.getItem("mentoria_users") || "[]");
-    setUsers(allUsers);
+  const loadUsers = async () => {
+    try {
+      const res = await fetch('/api/users');
+      const data = await res.json();
+      setUsers(data);
+    } catch (error) {
+      console.error('Failed to load users:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const deleteUser = (userId: string) => {
+  const deleteUser = async (userId: string) => {
     if (confirm("Удалить этого пользователя?")) {
-      const filtered = users.filter(u => u.id !== userId);
-      localStorage.setItem("mentoria_users", JSON.stringify(filtered));
-      loadUsers();
+      try {
+        await fetch(`/api/users?id=${userId}`, { method: 'DELETE' });
+        loadUsers();
+      } catch (error) {
+        console.error('Failed to delete user:', error);
+      }
     }
   };
 

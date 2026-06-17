@@ -41,6 +41,19 @@ function readDB() {
           interests: ['Администрирование'],
           coins: 1000,
           rank: 0
+        },
+        {
+          id: 'student_001',
+          name: 'Алихан Нуртас',
+          email: 'alikhan@student.kz',
+          password: 'student123',
+          role: 'student',
+          grade: '10 класс',
+          interests: ['Программирование', 'AI', 'Робототехника'],
+          coins: 250,
+          rank: 5,
+          mbti: 'INTJ',
+          mbtiAnalysis: 'INTJ - стратег и аналитик. Склонен к логическому мышлению, любит сложные задачи и системный подход. Отлично подходит для технических специальностей и исследовательской работы.'
         }
       ],
       courses: [],
