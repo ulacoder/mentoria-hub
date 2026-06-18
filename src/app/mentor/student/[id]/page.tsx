@@ -14,7 +14,9 @@ import {
   ArrowLeft,
   Award,
   TrendingUp,
-  BookOpen
+  BookOpen,
+  MessageCircle,
+  Send
 } from "lucide-react";
 
 interface StudentDetailPageProps {
@@ -31,6 +33,9 @@ export default function StudentDetailPage({ params }: StudentDetailPageProps) {
 
   const [student, setStudent] = useState<any>(null);
   const [mbtiAnalysis, setMbtiAnalysis] = useState<any>(null);
+  const [showChat, setShowChat] = useState(false);
+  const [message, setMessage] = useState("");
+  const [chatHistory, setChatHistory] = useState<any[]>([]);
 
   useEffect(() => {
     if (user && user.role === "mentor") {
@@ -40,6 +45,47 @@ export default function StudentDetailPage({ params }: StudentDetailPageProps) {
 
   const loadStudent = () => {
     if (typeof window === "undefined") return;
+
+    // Demo student Ula
+    if (studentId === "demo-ula") {
+      const demoStudent = {
+        userId: "demo-ula",
+        name: "Ula",
+        email: "ula@mentoria.com",
+        grade: "11 класс",
+        mbti: "INTJ",
+        interests: ["Математика", "STEM", "IT", "Программирование"],
+        coins: 1250,
+        rank: 3
+      };
+
+      const demoAnalysis = {
+        feedback: `Привет, Юла! Рады приветствовать тебя на платформе Mentoria Hub. Как представитель типа личности INTJ, или «Стратег», ты обладаешь редким и мощным сочетанием качеств: глубоким интеллектом, стратегическим видением и невероятной целеустремленностью. Твои интересы в сфере математики, STEM, IT и программирования — это идеальное поле для раскрытия твоего потенциала.
+
+INTJ от природы склонны к системному мышлению. Там, где другие видят хаос, ты видишь структуру, паттерны и алгоритмы. Твоя ведущая функция, интровертная интуиция, помогает тебе мгновенно схватывать сложные концепции и заглядывать в будущее, а вспомогательное логическое мышление позволяет превращать эти идеи в работающие, эффективные решения.
+
+Сейчас, в 11 классе, ты находишься на пороге важного жизненного этапа. Выбор вуза, подготовка к экзаменам, первые серьезные шаги в IT — все это требует колоссальной концентрации. Твой тип личности идеально приспособлен для планирования долгосрочных целей, поэтому ты сможешь выстроить оптимальный маршрут к успеху.
+
+Однако помни, что постоянная гонка за идеалом может утомлять. Мы здесь для того, чтобы помочь тебе не только достичь академических высот в STEM и английском языке, но и научиться балансировать нагрузку, доверять своей интуиции и получать удовольствие от самого процесса познания. Ты способна создавать потрясающие технологические решения, и мы гордимся возможностью поддержать тебя на этом пути!`,
+        strengths: [
+          "Системное и стратегическое мышление — видит закономерности там, где другие их не замечают",
+          "Высокая способность к абстрактному мышлению и работе со сложными концепциями",
+          "Независимость в обучении — способна самостоятельно разбираться в новых темах",
+          "Перфекционизм и высокие стандарты к своей работе, что приводит к качественным результатам"
+        ],
+        weaknesses: [
+          "Может быть слишком критична к себе — важно научиться праздновать промежуточные успехи",
+          "Склонность к чрезмерному планированию может замедлять начало действий",
+          "Социальное взаимодействие в группах может отнимать энергию — нужны перерывы для восстановления"
+        ],
+        mentorGuidance: "При работе с INTJ важно давать пространство для самостоятельного исследования и не навязывать готовые решения. Они ценят логику, компетентность и уважение к их интеллектуальным способностям. Лучший подход — задавать вопросы, которые стимулируют стратегическое мышление, и предлагать ресурсы для самостоятельного изучения. INTJ мотивируются сложными задачами и возможностью мастерства, поэтому курсы должны быть достаточно challenging. Избегайте микроменеджмента — доверяйте их способности организовать свой процесс обучения.",
+        learningStyle: "INTJ учатся лучше всего через теорию с последующим применением на практике. Предпочитают структурированные курсы с четкими целями, но ценят гибкость в методах достижения этих целей. Эффективны асинхронные форматы с возможностью углубления в интересующие темы."
+      };
+
+      setStudent(demoStudent);
+      setMbtiAnalysis(demoAnalysis);
+      return;
+    }
 
     const users = JSON.parse(localStorage.getItem("mentoria_users") || "[]");
     const foundStudent = users.find((u: any) => u.userId === studentId);
@@ -94,7 +140,7 @@ export default function StudentDetailPage({ params }: StudentDetailPageProps) {
             {/* Student Header */}
             <div className="bg-card border border-border/60 rounded-lg p-6 mb-6">
               <div className="flex items-start justify-between">
-                <div>
+                <div className="flex-1">
                   <h1 className="text-3xl font-heading font-bold mb-2">{student.name}</h1>
                   <p className="text-muted-foreground mb-4">
                     {student.grade} • {student.email}
@@ -110,14 +156,80 @@ export default function StudentDetailPage({ params }: StudentDetailPageProps) {
                     ))}
                   </div>
                 </div>
-                {student.mbti && (
-                  <div className="px-4 py-2 bg-primary/20 rounded-lg">
-                    <p className="text-xs text-muted-foreground mb-1">MBTI тип</p>
-                    <p className="text-2xl font-bold text-primary">{student.mbti}</p>
-                  </div>
-                )}
+                <div className="flex items-center gap-3">
+                  {student.mbti && (
+                    <div className="px-4 py-2 bg-primary/20 rounded-lg">
+                      <p className="text-xs text-muted-foreground mb-1">MBTI тип</p>
+                      <p className="text-2xl font-bold text-primary">{student.mbti}</p>
+                    </div>
+                  )}
+                  <Button onClick={() => setShowChat(!showChat)}>
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    {showChat ? "Скрыть чат" : "Написать студенту"}
+                  </Button>
+                </div>
               </div>
             </div>
+
+            {/* Chat Section */}
+            {showChat && (
+              <div className="bg-card border border-border/60 rounded-lg p-6 mb-6">
+                <h3 className="font-heading font-bold mb-4 flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5" />
+                  Сообщения с {student.name}
+                </h3>
+                <div className="space-y-4 mb-4 max-h-96 overflow-y-auto">
+                  {chatHistory.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">
+                      Начните разговор с вашим студентом
+                    </p>
+                  ) : (
+                    chatHistory.map((msg, idx) => (
+                      <div
+                        key={idx}
+                        className={`p-3 rounded-lg ${
+                          msg.from === "mentor"
+                            ? "bg-primary/10 ml-auto max-w-[80%]"
+                            : "bg-muted max-w-[80%]"
+                        }`}
+                      >
+                        <p className="text-xs text-muted-foreground mb-1">
+                          {msg.from === "mentor" ? "Вы" : student.name}
+                        </p>
+                        <p className="text-sm">{msg.text}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter") {
+                        if (message.trim()) {
+                          setChatHistory([...chatHistory, { from: "mentor", text: message }]);
+                          setMessage("");
+                        }
+                      }
+                    }}
+                    placeholder="Напишите сообщение..."
+                    className="flex-1 px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                  <Button
+                    onClick={() => {
+                      if (message.trim()) {
+                        setChatHistory([...chatHistory, { from: "mentor", text: message }]);
+                        setMessage("");
+                      }
+                    }}
+                  >
+                    <Send className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

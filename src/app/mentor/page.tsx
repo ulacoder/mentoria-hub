@@ -28,7 +28,20 @@ export default function MentorDashboardPage() {
       const res = await fetch('/api/users');
       const users = await res.json();
       const studentsOnly = users.filter((u: any) => u.role === "student");
-      setStudents(studentsOnly);
+
+      // Add demo student Ula for presentation
+      const demoStudent = {
+        id: "demo-ula",
+        name: "Ula",
+        email: "ula@mentoria.com",
+        grade: "11 класс",
+        role: "student",
+        mbti: "INTJ",
+        interests: ["Математика", "STEM", "IT", "Программирование"],
+        mbtiAnalysis: "INTJ — «Стратег». Обладает глубоким интеллектом, стратегическим видением и целеустремленностью. Системное мышление, интуитивное понимание сложных концепций и способность превращать идеи в работающие решения. Идеально подходит для STEM и IT."
+      };
+
+      setStudents([demoStudent, ...studentsOnly]);
     } catch (error) {
       console.error('Failed to fetch students:', error);
     } finally {
