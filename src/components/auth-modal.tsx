@@ -39,7 +39,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
       if (success) {
         onClose();
         if (redirectTo) {
-          router.push(redirectTo);
+          setTimeout(() => router.push(redirectTo), 100);
         } else {
           router.refresh();
         }
@@ -63,11 +63,11 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
         onClose();
         // Redirect students to profile setup
         if (formData.role === "student") {
-          router.push("/profile/setup");
+          setTimeout(() => router.push("/profile/setup"), 100);
         } else if (redirectTo) {
-          router.push(redirectTo);
+          setTimeout(() => router.push(redirectTo), 100);
         } else {
-          router.push("/dashboard");
+          setTimeout(() => router.push("/dashboard"), 100);
         }
       } else {
         setError("Пользователь с таким email уже существует");
@@ -84,9 +84,9 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 backdrop-blur-sm overflow-y-auto p-4 sm:p-6">
-      <div className="bg-card border border-border/60 rounded-lg w-full max-w-md my-auto">
-        <div className="sticky top-0 bg-card border-b border-border/40 p-4 flex items-center justify-between">
+    <div className="fixed inset-0 z-[999] flex items-start justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto">
+      <div className="bg-card border border-border/60 rounded-lg w-full max-w-md my-8 max-h-[calc(100vh-4rem)] shadow-2xl">
+        <div className="sticky top-0 bg-card border-b border-border/40 p-4 flex items-center justify-between z-10 rounded-t-lg">
           <h2 className="text-xl font-heading font-bold">
             {mode === "login" ? "Вход в аккаунт" : "Регистрация"}
           </h2>
@@ -95,7 +95,8 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <div className="max-h-[calc(100vh-8rem)] overflow-y-auto">
+          <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
             <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-lg">
               {error}
@@ -270,7 +271,47 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
               </p>
             )}
           </div>
+
+          {mode === "login" && (
+            <div className="mt-4 p-4 bg-muted/50 rounded-lg border border-border/40 text-sm space-y-3">
+              <h3 className="font-semibold text-center mb-2">📋 Тестовые аккаунты</h3>
+
+              <div className="space-y-2">
+                <div className="bg-background/80 p-3 rounded-md">
+                  <div className="font-medium text-primary mb-1">👨‍🏫 Ментор</div>
+                  <div className="text-xs text-muted-foreground space-y-0.5">
+                    <div>Email: <span className="font-mono text-foreground">mentor@mentoria.kz</span></div>
+                    <div>Пароль: <span className="font-mono text-foreground">mentor123</span></div>
+                  </div>
+                </div>
+
+                <div className="bg-background/80 p-3 rounded-md">
+                  <div className="font-medium text-primary mb-1">⚙️ Администратор</div>
+                  <div className="text-xs text-muted-foreground space-y-0.5">
+                    <div>Email: <span className="font-mono text-foreground">admin@mentoria.kz</span></div>
+                    <div>Пароль: <span className="font-mono text-foreground">admin123</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {mode === "register" && formData.role === "student" && (
+            <div className="mt-4 p-4 bg-blue-500/10 rounded-lg border border-blue-500/30 text-sm">
+              <div className="flex gap-2 items-start">
+                <div className="text-lg">💡</div>
+                <div>
+                  <div className="font-semibold text-blue-600 dark:text-blue-400 mb-1">Для студентов</div>
+                  <div className="text-xs text-muted-foreground">
+                    Создавайте аккаунт самостоятельно, чтобы указать свои интересы и пройти тест на тип личности.
+                    Это поможет платформе подобрать для вас персонализированные курсы и менторов!
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </form>
+        </div>
       </div>
     </div>
   );

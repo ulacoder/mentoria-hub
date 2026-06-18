@@ -41,8 +41,41 @@ export default function AddCoursePage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Course submitted:", formData);
-    alert("Курс добавлен! (В реальной версии сохранится в базу данных)");
+
+    if (!formData.title || !formData.category || !formData.level || !formData.duration || !formData.description || !formData.instructor) {
+      alert("Заполни все обязательные поля!");
+      return;
+    }
+
+    // Load existing courses from localStorage
+    const existingCourses = JSON.parse(localStorage.getItem("mentoria_custom_courses") || "[]");
+
+    // Create new course object
+    const newCourse = {
+      id: Date.now(),
+      title: formData.title,
+      category: formData.category,
+      level: formData.level.toLowerCase(),
+      duration: formData.duration,
+      description: formData.description,
+      instructor: formData.instructor,
+      lessons: formData.lessons.map((lesson, idx) => ({
+        id: idx + 1,
+        title: lesson.title || `Урок ${idx + 1}`,
+        description: lesson.description || "",
+        duration: "45 мин",
+        completed: false
+      })),
+      image: "/placeholder-course.jpg",
+      enrolledStudents: 0
+    };
+
+    // Save to localStorage
+    existingCourses.push(newCourse);
+    localStorage.setItem("mentoria_custom_courses", JSON.stringify(existingCourses));
+
+    alert("Курс успешно добавлен!");
+    window.location.href = "/admin/courses";
   };
 
   return (

@@ -21,6 +21,10 @@ interface AuthContextType {
   register: (name: string, email: string, password: string, grade: string, interests: string[], role: "student" | "mentor" | "admin") => Promise<boolean>;
   logout: () => void;
   updateUser: (updates: Partial<User>) => void;
+  showAuthModal: boolean;
+  setShowAuthModal: (show: boolean) => void;
+  authRedirectTo: string | null;
+  setAuthRedirectTo: (path: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,6 +32,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authRedirectTo, setAuthRedirectTo] = useState<string | null>(null);
 
   useEffect(() => {
     // Initialize default accounts (mentor & admin)
@@ -215,6 +221,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         register,
         logout,
         updateUser,
+        showAuthModal,
+        setShowAuthModal,
+        authRedirectTo,
+        setAuthRedirectTo,
       }}
     >
       {children}

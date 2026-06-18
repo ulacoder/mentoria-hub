@@ -11,10 +11,14 @@ import {
   Target,
   Star,
   Play,
-  RotateCcw
+  RotateCcw,
+  BookOpen,
+  Calculator
 } from "lucide-react";
 
+type GameType = "math" | "english";
 type GameMode = "addition" | "subtraction" | "multiplication" | "division";
+type EnglishMode = "vocabulary" | "grammar" | "reading";
 
 interface Question {
   num1: number;
@@ -23,13 +27,24 @@ interface Question {
   answer: number;
 }
 
-export default function MathGamePage() {
+interface EnglishQuestion {
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation?: string;
+}
+
+export default function GamePage() {
   const router = useRouter();
   const { user, updateUser } = useAuth();
+  const [gameType, setGameType] = useState<GameType | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameMode, setGameMode] = useState<GameMode>("addition");
+  const [englishMode, setEnglishMode] = useState<EnglishMode>("vocabulary");
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+  const [currentEnglishQuestion, setCurrentEnglishQuestion] = useState<EnglishQuestion | null>(null);
   const [userAnswer, setUserAnswer] = useState("");
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [timeLeft, setTimeLeft] = useState(60);
@@ -92,39 +107,125 @@ export default function MathGamePage() {
     return { num1, num2, operation, answer };
   };
 
+  const generateEnglishQuestion = (): EnglishQuestion => {
+    const vocabularyQuestions = [
+      { question: "What does 'amazing' mean?", options: ["Удивительный", "Скучный", "Грустный", "Злой"], correctAnswer: 0 },
+      { question: "Choose the correct word: I ___ to school every day.", options: ["go", "goes", "going", "went"], correctAnswer: 0 },
+      { question: "What is the opposite of 'hot'?", options: ["Cold", "Warm", "Cool", "Big"], correctAnswer: 0 },
+      { question: "Complete: She ___ a book right now.", options: ["is reading", "read", "reads", "reading"], correctAnswer: 0 },
+      { question: "What does 'library' mean?", options: ["Библиотека", "Магазин", "Школа", "Парк"], correctAnswer: 0 },
+      { question: "Choose correct: They ___ playing football.", options: ["are", "is", "am", "be"], correctAnswer: 0 },
+      { question: "What is 'beautiful' in Russian?", options: ["Красивый", "Большой", "Маленький", "Быстрый"], correctAnswer: 0 },
+      { question: "Past tense of 'go':", options: ["went", "goed", "go", "going"], correctAnswer: 0 },
+      { question: "What does 'excited' mean?", options: ["Взволнованный", "Усталый", "Голодный", "Сонный"], correctAnswer: 0 },
+      { question: "Choose: I ___ English every day.", options: ["study", "studies", "studying", "studied"], correctAnswer: 0 },
+    ];
+
+    const grammarQuestions = [
+      { question: "Which is correct?", options: ["He is a teacher", "He are a teacher", "He am a teacher", "He be a teacher"], correctAnswer: 0 },
+      { question: "Complete: I have ___ apples.", options: ["three", "tree", "free", "thee"], correctAnswer: 0 },
+      { question: "Which is correct?", options: ["She doesn't like", "She don't like", "She not like", "She no like"], correctAnswer: 0 },
+      { question: "Choose: ___ you like pizza?", options: ["Do", "Does", "Is", "Are"], correctAnswer: 0 },
+      { question: "Complete: He ___ to school yesterday.", options: ["went", "go", "goes", "going"], correctAnswer: 0 },
+      { question: "Which is correct?", options: ["I am happy", "I is happy", "I are happy", "I be happy"], correctAnswer: 0 },
+      { question: "Choose: They ___ play football on Sundays.", options: ["usually", "usual", "usualry", "usualy"], correctAnswer: 0 },
+      { question: "Complete: She ___ a student.", options: ["is", "am", "are", "be"], correctAnswer: 0 },
+      { question: "Which is correct?", options: ["I can swim", "I cans swim", "I can swims", "I can swimming"], correctAnswer: 0 },
+      { question: "Choose: ___ is your name?", options: ["What", "Who", "Where", "When"], correctAnswer: 0 },
+    ];
+
+    const readingQuestions = [
+      {
+        question: "Read: 'Tom has a dog. The dog is brown.' What color is the dog?",
+        options: ["Brown", "Black", "White", "Yellow"],
+        correctAnswer: 0
+      },
+      {
+        question: "Read: 'Mary likes to read books.' What does Mary like?",
+        options: ["Reading books", "Playing games", "Watching TV", "Swimming"],
+        correctAnswer: 0
+      },
+      {
+        question: "Read: 'It is sunny today.' What is the weather?",
+        options: ["Sunny", "Rainy", "Cloudy", "Snowy"],
+        correctAnswer: 0
+      },
+      {
+        question: "Read: 'I have two cats and one dog.' How many pets?",
+        options: ["Three", "Two", "One", "Four"],
+        correctAnswer: 0
+      },
+      {
+        question: "Read: 'She goes to school by bus.' How does she go to school?",
+        options: ["By bus", "By car", "By bike", "On foot"],
+        correctAnswer: 0
+      },
+    ];
+
+    let questions = vocabularyQuestions;
+    if (englishMode === "grammar") questions = grammarQuestions;
+    if (englishMode === "reading") questions = readingQuestions;
+
+    return questions[Math.floor(Math.random() * questions.length)];
+  };
+
   const startGame = () => {
     setGameStarted(true);
     setScore(0);
     setStreak(0);
     setTimeLeft(60);
-    setCurrentQuestion(generateQuestion());
     setUserAnswer("");
+    setSelectedOption(null);
     setIsCorrect(null);
+
+    if (gameType === "math") {
+      setCurrentQuestion(generateQuestion());
+    } else {
+      setCurrentEnglishQuestion(generateEnglishQuestion());
+    }
   };
 
   const checkAnswer = () => {
-    if (!currentQuestion) return;
+    if (gameType === "math" && currentQuestion) {
+      const userNum = parseInt(userAnswer);
+      if (userNum === currentQuestion.answer) {
+        const points = streak >= 5 ? 15 : 10;
+        setScore(score + points);
+        setStreak(streak + 1);
+        setIsCorrect(true);
 
-    const userNum = parseInt(userAnswer);
-    if (userNum === currentQuestion.answer) {
-      // Correct!
-      const points = streak >= 5 ? 15 : 10;
-      setScore(score + points);
-      setStreak(streak + 1);
-      setIsCorrect(true);
+        setTimeout(() => {
+          setCurrentQuestion(generateQuestion());
+          setUserAnswer("");
+          setIsCorrect(null);
+        }, 500);
+      } else {
+        setStreak(0);
+        setIsCorrect(false);
+        setTimeout(() => {
+          setIsCorrect(null);
+        }, 1000);
+      }
+    } else if (gameType === "english" && currentEnglishQuestion && selectedOption !== null) {
+      if (selectedOption === currentEnglishQuestion.correctAnswer) {
+        const points = streak >= 5 ? 15 : 10;
+        setScore(score + points);
+        setStreak(streak + 1);
+        setIsCorrect(true);
 
-      setTimeout(() => {
-        setCurrentQuestion(generateQuestion());
-        setUserAnswer("");
-        setIsCorrect(null);
-      }, 500);
-    } else {
-      // Wrong
-      setStreak(0);
-      setIsCorrect(false);
-      setTimeout(() => {
-        setIsCorrect(null);
-      }, 1000);
+        setTimeout(() => {
+          setCurrentEnglishQuestion(generateEnglishQuestion());
+          setSelectedOption(null);
+          setIsCorrect(null);
+        }, 1000);
+      } else {
+        setStreak(0);
+        setIsCorrect(false);
+        setTimeout(() => {
+          setIsCorrect(null);
+          setSelectedOption(null);
+        }, 1500);
+      }
     }
   };
 
@@ -150,69 +251,153 @@ export default function MathGamePage() {
     <div className="flex flex-col min-h-screen">
       <div className="flex-1 bg-gradient-to-br from-primary/5 via-background to-accent/5">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {!gameStarted ? (
-            // Game Start Screen
+          {!gameType ? (
+            // Game Type Selection
             <div className="text-center">
               <div className="mb-8">
                 <div className="inline-block p-4 bg-primary/10 rounded-full mb-4">
                   <Zap className="w-16 h-16 text-primary" />
                 </div>
-                <h1 className="text-4xl font-heading font-bold mb-3">Математическая молния</h1>
+                <h1 className="text-4xl font-heading font-bold mb-3">Образовательные игры</h1>
                 <p className="text-lg text-muted-foreground">
-                  Решай примеры на скорость и зарабатывай коины!
+                  Выбери игру и зарабатывай коины!
                 </p>
               </div>
 
-              {/* Game Mode Selection */}
-              <div className="bg-card border border-border/60 rounded-lg p-8 mb-8">
-                <h3 className="text-xl font-heading font-bold mb-6">Выбери режим</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <button
-                    onClick={() => setGameMode("addition")}
-                    className={`p-6 rounded-lg border-2 transition-all ${
-                      gameMode === "addition"
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <div className="text-3xl mb-2">➕</div>
-                    <div className="font-semibold">Сложение</div>
-                  </button>
-                  <button
-                    onClick={() => setGameMode("subtraction")}
-                    className={`p-6 rounded-lg border-2 transition-all ${
-                      gameMode === "subtraction"
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <div className="text-3xl mb-2">➖</div>
-                    <div className="font-semibold">Вычитание</div>
-                  </button>
-                  <button
-                    onClick={() => setGameMode("multiplication")}
-                    className={`p-6 rounded-lg border-2 transition-all ${
-                      gameMode === "multiplication"
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <div className="text-3xl mb-2">✖️</div>
-                    <div className="font-semibold">Умножение</div>
-                  </button>
-                  <button
-                    onClick={() => setGameMode("division")}
-                    className={`p-6 rounded-lg border-2 transition-all ${
-                      gameMode === "division"
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <div className="text-3xl mb-2">➗</div>
-                    <div className="font-semibold">Деление</div>
-                  </button>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                <button
+                  onClick={() => setGameType("math")}
+                  className="bg-card border-2 border-border hover:border-primary rounded-lg p-8 transition-all hover:scale-105"
+                >
+                  <Calculator className="w-16 h-16 text-primary mx-auto mb-4" />
+                  <h3 className="text-2xl font-heading font-bold mb-2">Математика</h3>
+                  <p className="text-muted-foreground">Решай примеры на скорость</p>
+                </button>
+
+                <button
+                  onClick={() => setGameType("english")}
+                  className="bg-card border-2 border-border hover:border-primary rounded-lg p-8 transition-all hover:scale-105"
+                >
+                  <BookOpen className="w-16 h-16 text-primary mx-auto mb-4" />
+                  <h3 className="text-2xl font-heading font-bold mb-2">Английский</h3>
+                  <p className="text-muted-foreground">Проверь свои знания языка</p>
+                </button>
               </div>
+            </div>
+          ) : !gameStarted ? (
+            // Game Start Screen
+            <div className="text-center">
+              <div className="mb-8">
+                <div className="inline-block p-4 bg-primary/10 rounded-full mb-4">
+                  {gameType === "math" ? <Calculator className="w-16 h-16 text-primary" /> : <BookOpen className="w-16 h-16 text-primary" />}
+                </div>
+                <h1 className="text-4xl font-heading font-bold mb-3">
+                  {gameType === "math" ? "Математическая молния" : "Английский квиз"}
+                </h1>
+                <p className="text-lg text-muted-foreground">
+                  {gameType === "math" ? "Решай примеры на скорость и зарабатывай коины!" : "Отвечай на вопросы и улучшай английский!"}
+                </p>
+              </div>
+
+              <Button
+                variant="ghost"
+                onClick={() => setGameType(null)}
+                className="mb-6"
+              >
+                ← Назад к выбору игры
+              </Button>
+
+              {/* Game Mode Selection */}
+              {gameType === "math" ? (
+                <div className="bg-card border border-border/60 rounded-lg p-8 mb-8">
+                  <h3 className="text-xl font-heading font-bold mb-6">Выбери режим</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button
+                      onClick={() => setGameMode("addition")}
+                      className={`p-6 rounded-lg border-2 transition-all ${
+                        gameMode === "addition"
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="text-3xl mb-2">➕</div>
+                      <div className="font-semibold">Сложение</div>
+                    </button>
+                    <button
+                      onClick={() => setGameMode("subtraction")}
+                      className={`p-6 rounded-lg border-2 transition-all ${
+                        gameMode === "subtraction"
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="text-3xl mb-2">➖</div>
+                      <div className="font-semibold">Вычитание</div>
+                    </button>
+                    <button
+                      onClick={() => setGameMode("multiplication")}
+                      className={`p-6 rounded-lg border-2 transition-all ${
+                        gameMode === "multiplication"
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="text-3xl mb-2">✖️</div>
+                      <div className="font-semibold">Умножение</div>
+                    </button>
+                    <button
+                      onClick={() => setGameMode("division")}
+                      className={`p-6 rounded-lg border-2 transition-all ${
+                        gameMode === "division"
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="text-3xl mb-2">➗</div>
+                      <div className="font-semibold">Деление</div>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-card border border-border/60 rounded-lg p-8 mb-8">
+                  <h3 className="text-xl font-heading font-bold mb-6">Выбери тип вопросов</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button
+                      onClick={() => setEnglishMode("vocabulary")}
+                      className={`p-6 rounded-lg border-2 transition-all ${
+                        englishMode === "vocabulary"
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="text-3xl mb-2">📚</div>
+                      <div className="font-semibold">Словарный запас</div>
+                    </button>
+                    <button
+                      onClick={() => setEnglishMode("grammar")}
+                      className={`p-6 rounded-lg border-2 transition-all ${
+                        englishMode === "grammar"
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="text-3xl mb-2">✏️</div>
+                      <div className="font-semibold">Грамматика</div>
+                    </button>
+                    <button
+                      onClick={() => setEnglishMode("reading")}
+                      className={`p-6 rounded-lg border-2 transition-all ${
+                        englishMode === "reading"
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="text-3xl mb-2">📖</div>
+                      <div className="font-semibold">Чтение</div>
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Rules */}
               <div className="bg-card border border-border/60 rounded-lg p-6 mb-8 text-left">
@@ -280,7 +465,7 @@ export default function MathGamePage() {
               </div>
 
               {/* Question */}
-              {currentQuestion && (
+              {gameType === "math" && currentQuestion && (
                 <div className="bg-card border-2 border-primary/40 rounded-lg p-12 mb-8 text-center">
                   <div className="text-6xl font-bold mb-8">
                     {currentQuestion.num1} {currentQuestion.operation} {currentQuestion.num2} = ?
@@ -321,6 +506,54 @@ export default function MathGamePage() {
                   {isCorrect === false && (
                     <div className="mt-6 text-2xl text-red-500 font-bold">
                       ✗ Неправильно
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {gameType === "english" && currentEnglishQuestion && (
+                <div className="bg-card border-2 border-primary/40 rounded-lg p-8 mb-8">
+                  <div className="text-2xl font-bold mb-8 text-center">
+                    {currentEnglishQuestion.question}
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3 max-w-2xl mx-auto">
+                    {currentEnglishQuestion.options.map((option, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          setSelectedOption(index);
+                          setTimeout(() => checkAnswer(), 100);
+                        }}
+                        disabled={isCorrect !== null}
+                        className={`p-4 rounded-lg border-2 text-lg font-semibold transition-all ${
+                          selectedOption === index && isCorrect === true
+                            ? "border-green-500 bg-green-500/20"
+                            : selectedOption === index && isCorrect === false
+                            ? "border-red-500 bg-red-500/20"
+                            : selectedOption === index
+                            ? "border-primary bg-primary/10"
+                            : "border-border hover:border-primary/50 hover:bg-muted/50"
+                        }`}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+
+                  {isCorrect === true && (
+                    <div className="mt-6 text-2xl text-green-500 font-bold animate-bounce text-center">
+                      ✓ Правильно!
+                    </div>
+                  )}
+                  {isCorrect === false && (
+                    <div className="mt-6 text-center">
+                      <div className="text-2xl text-red-500 font-bold mb-2">
+                        ✗ Неправильно
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Правильный ответ: {currentEnglishQuestion.options[currentEnglishQuestion.correctAnswer]}
+                      </div>
                     </div>
                   )}
                 </div>

@@ -141,6 +141,21 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Student Info Box */}
+            <div className="mt-4 p-4 bg-blue-500/10 rounded-lg border border-blue-500/30">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                <div className="text-xs text-blue-600">
+                  <p className="font-semibold mb-1">Информация для учеников</p>
+                  <p className="text-blue-600/80">
+                    Аккаунт ученика создается самостоятельно через регистрацию. Это необходимо
+                    для определения твоего типа личности и интересов, чтобы наша AI-система
+                    подобрала идеального ментора именно для тебя!
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="mt-6 text-center text-sm text-muted-foreground">
               Нет аккаунта?{" "}
               <Link href="/register" className="text-primary hover:underline font-medium">

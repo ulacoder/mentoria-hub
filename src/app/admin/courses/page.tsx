@@ -34,7 +34,23 @@ export default function AdminCoursesPage() {
 
   const loadCourses = () => {
     const allCourses = getCourses();
-    setCourses(allCourses);
+    const customCourses = JSON.parse(localStorage.getItem("mentoria_custom_courses") || "[]");
+    setCourses([...allCourses, ...customCourses]);
+  };
+
+  const deleteCourse = (courseId: number) => {
+    if (!confirm("Точно удалить этот курс?")) return;
+
+    // Remove from custom courses
+    const customCourses = JSON.parse(localStorage.getItem("mentoria_custom_courses") || "[]");
+    const updated = customCourses.filter((c: any) => c.id !== courseId);
+    localStorage.setItem("mentoria_custom_courses", JSON.stringify(updated));
+
+    // Reload courses
+    loadCourses();
+    if (selectedCourse?.id === courseId) {
+      setSelectedCourse(null);
+    }
   };
 
   const getEnrollmentCount = (courseId: number) => {
@@ -64,7 +80,10 @@ export default function AdminCoursesPage() {
                   Добавляй, редактируй и управляй курсами на платформе
                 </p>
               </div>
-              <Button className="bg-primary hover:bg-primary/90">
+              <Button
+                className="bg-primary hover:bg-primary/90"
+                onClick={() => router.push("/admin/courses/add")}
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Добавить курс
               </Button>
@@ -210,6 +229,7 @@ export default function AdminCoursesPage() {
                         size="sm"
                         variant="destructive"
                         className="w-full"
+                        onClick={() => deleteCourse(selectedCourse.id)}
                       >
                         <Trash2 className="w-4 h-4 mr-2" />
                         Удалить курс
