@@ -301,6 +301,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
             </form>
           </div>
         </div>
+      </div>
     </>
   );
 }
