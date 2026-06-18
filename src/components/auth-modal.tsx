@@ -84,9 +84,16 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
 
   return (
     <>
-      <div className="fixed inset-0 flex items-center justify-center z-[9998] bg-black/60 backdrop-blur-md" onClick={onClose}>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-md z-[9998]"
+        onClick={onClose}
+      />
+
+      {/* Modal */}
+      <div className="fixed inset-0 flex items-center justify-center z-[9999] pointer-events-none">
         <div
-          className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 w-[95vw] max-w-[400px] max-h-[85vh] overflow-hidden m-4"
+          className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 w-[95vw] max-w-[400px] max-h-[85vh] overflow-hidden m-4 pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-zinc-800">
