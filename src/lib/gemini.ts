@@ -68,7 +68,7 @@ export async function generateMentorResponse(
     }
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       generationConfig: {
         temperature: 0.9,
         topP: 0.95,

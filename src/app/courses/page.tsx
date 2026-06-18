@@ -26,12 +26,15 @@ import { useAuth } from "@/contexts/auth-context";
 
 const categories = ["Все", "Математика", "Английский", "Программирование", "Физика", "Экономика", "SAT/IELTS", "Информатика"];
 const levels = ["Все", "Начальный", "Средний", "Продвинутый"];
+const costs = ["Все", "Бесплатно", "Платно"];
 
 export default function CoursesPage() {
   const router = useRouter();
   const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState("Все");
   const [selectedLevel, setSelectedLevel] = useState("Все");
+  const [selectedCost, setSelectedCost] = useState("Все");
+  const [searchQuery, setSearchQuery] = useState("");
   const [enrolledCourses, setEnrolledCourses] = useState<number[]>([]);
 
   const courses = getAllEnhancedCourses();
@@ -63,7 +66,14 @@ export default function CoursesPage() {
   const filteredCourses = courses.filter((course) => {
     const matchesCategory = selectedCategory === "Все" || course.category === selectedCategory;
     const matchesLevel = selectedLevel === "Все" || course.level === selectedLevel;
-    return matchesCategory && matchesLevel;
+    const matchesCost = selectedCost === "Все" ||
+      (selectedCost === "Бесплатно" && course.cost === "Бесплатно") ||
+      (selectedCost === "Платно" && course.cost.includes("Платно"));
+    const matchesSearch = searchQuery === "" ||
+      course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()));
+    return matchesCategory && matchesLevel && matchesCost && matchesSearch;
   });
 
   return (
@@ -121,6 +131,19 @@ export default function CoursesPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Search */}
+          <div className="mb-8">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Поиск курсов по названию или ключевым словам..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+          </div>
+
           {/* Filters */}
           <div className="mb-8 space-y-6">
             <div>
@@ -156,6 +179,25 @@ export default function CoursesPage() {
                     }`}
                   >
                     {level}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-3">Стоимость</h3>
+              <div className="flex flex-wrap gap-2">
+                {costs.map((cost) => (
+                  <button
+                    key={cost}
+                    onClick={() => setSelectedCost(cost)}
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                      selectedCost === cost
+                        ? "bg-primary text-white"
+                        : "bg-background border border-border hover:border-primary/40"
+                    }`}
+                  >
+                    {cost}
                   </button>
                 ))}
               </div>
@@ -219,6 +261,19 @@ export default function CoursesPage() {
                         <BookOpen className="w-4 h-4" />
                         <span>{course.totalLessons} уроков</span>
                       </div>
+                    </div>
+
+                    <div className="text-sm font-medium text-foreground mb-3">
+                      {course.cost}
+                    </div>
+
+                    {/* Keywords */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {course.keywords.slice(0, 3).map((keyword, idx) => (
+                        <span key={idx} className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full font-medium border border-primary/30">
+                          #{keyword}
+                        </span>
+                      ))}
                     </div>
 
                     <div className="flex items-center gap-2">

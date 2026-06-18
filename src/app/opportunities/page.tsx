@@ -28,7 +28,8 @@ import { useAuth } from "@/contexts/auth-context";
 
 const categories = ["Все", "Олимпиада", "Конкурс", "Стипендия", "Летняя программа", "Хакатон", "Конференция", "Исследовательская программа"];
 const fields = ["Все", "STEM", "Бизнес", "IT", "Программирование", "Социальное влияние", "Наука", "Математика", "Физика"];
-const grades = ["Все", "8 класс", "9 класс", "10 класс", "11 класс", "Выпускники"];
+const grades = ["Все", "8 класс", "9 класс", "10 класс", "11 класс", "12 класс", "Выпускники"];
+const costs = ["Все", "Бесплатно", "Платно"];
 
 export default function OpportunitiesPage() {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function OpportunitiesPage() {
   const [selectedCategory, setSelectedCategory] = useState("Все");
   const [selectedField, setSelectedField] = useState("Все");
   const [selectedGrade, setSelectedGrade] = useState("Все");
+  const [selectedCost, setSelectedCost] = useState("Все");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [savedItems, setSavedItems] = useState<number[]>([]);
@@ -70,11 +72,15 @@ export default function OpportunitiesPage() {
     const matchesCategory = selectedCategory === "Все" || opp.category === selectedCategory;
     const matchesField = selectedField === "Все" || opp.tags.includes(selectedField);
     const matchesGrade = selectedGrade === "Все" || opp.grade.includes(selectedGrade);
+    const matchesCost = selectedCost === "Все" ||
+      (selectedCost === "Бесплатно" && opp.cost === "Бесплатно") ||
+      (selectedCost === "Платно" && opp.cost.includes("Платно"));
     const matchesSearch = searchQuery === "" ||
       opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      opp.description.toLowerCase().includes(searchQuery.toLowerCase());
+      opp.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      opp.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    return matchesCategory && matchesField && matchesGrade && matchesSearch;
+    return matchesCategory && matchesField && matchesGrade && matchesCost && matchesSearch;
   });
 
   return (
@@ -216,6 +222,25 @@ export default function OpportunitiesPage() {
                     ))}
                   </div>
                 </div>
+
+                <div>
+                  <h3 className="font-semibold mb-3">Стоимость</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {costs.map((cost) => (
+                      <button
+                        key={cost}
+                        onClick={() => setSelectedCost(cost)}
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                          selectedCost === cost
+                            ? "bg-primary text-white"
+                            : "bg-background border border-border hover:border-primary/40"
+                        }`}
+                      >
+                        {cost}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -286,6 +311,15 @@ export default function OpportunitiesPage() {
                     {opp.grade.slice(0, 2).map((grade, idx) => (
                       <span key={idx} className="px-2 py-1 bg-muted text-xs rounded border border-border">
                         {grade}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Keywords */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {opp.keywords.slice(0, 4).map((keyword, idx) => (
+                      <span key={idx} className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full font-medium border border-primary/30">
+                        #{keyword}
                       </span>
                     ))}
                   </div>

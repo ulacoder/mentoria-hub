@@ -13,6 +13,7 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  preload: false,
 });
 
 const dmSans = DM_Sans({
@@ -20,11 +21,12 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
   title: "Mentoria Hub - Educational Opportunities Platform",
-  description: "Find competitions, scholarships, programs and take async courses. Platform for 8-11 grade students.",
+  description: "Find competitions, scholarships, programs and take async courses. Platform for 8-12 grade students.",
 };
 
 export default function RootLayout({

@@ -8,7 +8,7 @@ import { GraduationCap, Mail, Lock, User, GraduationCapIcon, AlertCircle } from 
 import { useAuth } from "@/contexts/auth-context";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-const gradeOptions = ["8 класс", "9 класс", "10 класс", "11 класс", "Выпускник"];
+const gradeOptions = ["8 класс", "9 класс", "10 класс", "11 класс", "12 класс", "Выпускник"];
 const interestOptions = ["STEM", "Математика", "Физика", "Программирование", "IT", "Бизнес", "Английский язык", "Наука", "Социальное влияние"];
 const roleOptions = [
   { value: "student", label: "Студент" },

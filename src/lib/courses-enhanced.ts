@@ -28,6 +28,8 @@ export interface EnhancedCourse {
   level: "Начальный" | "Средний" | "Продвинутый";
   duration: string;
   totalLessons: number;
+  cost: string;
+  keywords: string[];
   description: string;
   fullDescription: string;
   instructor: string;
@@ -45,6 +47,8 @@ export const enhancedCoursesData: EnhancedCourse[] = [
     level: "Начальный",
     duration: "8 недель",
     totalLessons: 12,
+    cost: "Бесплатно",
+    keywords: ["математика", "алгебра", "геометрия", "начальный", "бесплатно"],
     description: "Фундаментальные концепции математики для учеников 9-10 классов",
     fullDescription: "Этот курс охватывает ключевые темы алгебры и геометрии, необходимые для успешного обучения в старших классах. Каждый урок включает видео-объяснения, практические задачи и мини-тесты с персональным фидбеком от AI ментора Navi.",
     instructor: "Арман Нұрланов",
@@ -160,6 +164,8 @@ export const enhancedCoursesData: EnhancedCourse[] = [
     level: "Средний",
     duration: "10 недель",
     totalLessons: 15,
+    cost: "Платно: 15,000 тг",
+    keywords: ["английский", "язык", "IELTS", "TOEFL", "академический", "платно"],
     description: "Академический английский для поступления в зарубежные университеты",
     fullDescription: "Курс фокусируется на навыках, необходимых для успешного обучения на английском: академическое письмо, чтение научных текстов, презентации и участие в дискуссиях.",
     instructor: "Sarah Johnson",
@@ -227,6 +233,8 @@ export const enhancedCoursesData: EnhancedCourse[] = [
     level: "Продвинутый",
     duration: "12 недель",
     totalLessons: 20,
+    cost: "Платно: 25,000 тг",
+    keywords: ["SAT", "тест", "экзамен", "подготовка", "университет", "платно"],
     description: "Полная подготовка к SAT: Math, Reading, Writing",
     fullDescription: "Comprehensive SAT preparation covering all sections with practice tests, strategies, and personalized feedback.",
     instructor: "Michael Chen",

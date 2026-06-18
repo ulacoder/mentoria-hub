@@ -66,7 +66,7 @@ export default function AboutPage() {
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Цифровая платформа для поиска образовательных возможностей и асинхронного обучения.
-                Помогаем ученикам 8-11 классов развиваться и достигать академических целей.
+                Помогаем ученикам 8-12 классов развиваться и достигать академических целей.
               </p>
             </div>
           </div>
@@ -219,7 +219,7 @@ export default function AboutPage() {
                 <span className="text-lg font-heading font-bold">Mentoria Hub</span>
               </div>
               <p className="text-sm text-muted-foreground max-w-sm">
-                Платформа для поиска образовательных возможностей и асинхронного обучения для учеников 8-11 классов.
+                Платформа для поиска образовательных возможностей и асинхронного обучения для учеников 8-12 классов.
               </p>
             </div>
 
