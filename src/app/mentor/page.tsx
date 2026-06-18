@@ -24,26 +24,27 @@ export default function MentorDashboardPage() {
   }, [user]);
 
   const fetchStudents = async () => {
+    // Add demo student Ula for presentation FIRST
+    const demoStudent = {
+      id: "demo-ula",
+      name: "Ula",
+      email: "ula@mentoria.com",
+      grade: "11 класс",
+      role: "student",
+      mbti: "INTJ",
+      interests: ["Математика", "STEM", "IT", "Программирование"],
+      mbtiAnalysis: "INTJ — «Стратег». Обладает глубоким интеллектом, стратегическим видением и целеустремленностью. Системное мышление, интуитивное понимание сложных концепций и способность превращать идеи в работающие решения. Идеально подходит для STEM и IT."
+    };
+
     try {
       const res = await fetch('/api/users');
       const users = await res.json();
       const studentsOnly = users.filter((u: any) => u.role === "student");
-
-      // Add demo student Ula for presentation
-      const demoStudent = {
-        id: "demo-ula",
-        name: "Ula",
-        email: "ula@mentoria.com",
-        grade: "11 класс",
-        role: "student",
-        mbti: "INTJ",
-        interests: ["Математика", "STEM", "IT", "Программирование"],
-        mbtiAnalysis: "INTJ — «Стратег». Обладает глубоким интеллектом, стратегическим видением и целеустремленностью. Системное мышление, интуитивное понимание сложных концепций и способность превращать идеи в работающие решения. Идеально подходит для STEM и IT."
-      };
-
       setStudents([demoStudent, ...studentsOnly]);
     } catch (error) {
       console.error('Failed to fetch students:', error);
+      // Even if API fails, show demo student
+      setStudents([demoStudent]);
     } finally {
       setLoading(false);
     }
@@ -101,14 +102,14 @@ export default function MentorDashboardPage() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => router.push(`/profile/mbti`)}
+                            onClick={() => router.push(`/mentor/student/${student.id}`)}
                           >
                             <Brain className="w-4 h-4 mr-2" />
-                            Личность
+                            Полный профиль
                           </Button>
                           <Button
                             size="sm"
-                            onClick={() => router.push(`/messages`)}
+                            onClick={() => router.push(`/mentor/student/${student.id}`)}
                           >
                             <MessageCircle className="w-4 h-4 mr-2" />
                             Написать
