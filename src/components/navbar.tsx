@@ -9,29 +9,28 @@ import { Logo } from "@/components/logo";
 import { useAuth } from "@/contexts/auth-context";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useLocale } from "@/contexts/locale-context";
-import { AuthModal } from "@/components/auth-modal";
 
 export function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout, setShowAuthModal, setAuthRedirectTo } = useAuth();
   const { t } = useLocale();
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [redirectTo, setRedirectTo] = useState<string | undefined>();
 
   const handleProtectedClick = (e: React.MouseEvent, path: string) => {
     if (!user) {
       e.preventDefault();
-      setRedirectTo(path);
+      setAuthRedirectTo(path);
       setShowAuthModal(true);
     }
   };
 
+  const handleAuthClick = (redirectTo?: string) => {
+    if (redirectTo) {
+      setAuthRedirectTo(redirectTo);
+    }
+    setShowAuthModal(true);
+  };
+
   return (
     <nav className="border-b border-border/40 backdrop-blur-sm sticky top-0 z-50 bg-background/80">
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        redirectTo={redirectTo}
-      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -99,10 +98,10 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <Button variant="ghost" size="sm" onClick={() => setShowAuthModal(true)}>
+                <Button variant="ghost" size="sm" onClick={() => handleAuthClick()}>
                   Вход
                 </Button>
-                <Button size="sm" className="bg-primary hover:bg-primary/90" onClick={() => setShowAuthModal(true)}>
+                <Button size="sm" className="bg-primary hover:bg-primary/90" onClick={() => handleAuthClick()}>
                   Регистрация
                 </Button>
               </>

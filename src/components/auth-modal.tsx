@@ -13,14 +13,22 @@ interface AuthModalProps {
 }
 
 const interestOptions = [
-  "Математика",
   "Программирование",
+  "IT",
+  "Математика",
   "Физика",
   "Биология",
+  "Химия",
+  "Дизайн",
   "Искусство",
   "Музыка",
   "Спорт",
-  "Языки"
+  "Языки",
+  "Бизнес",
+  "Маркетинг",
+  "Робототехника",
+  "Игры",
+  "Кино"
 ];
 
 export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
@@ -66,7 +74,14 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
         setError("Пожалуйста, выберите хотя бы один интерес");
         return;
       }
-      const success = await register(formData);
+      const success = await register(
+        formData.name,
+        formData.email,
+        formData.password,
+        "—",
+        formData.interests,
+        formData.role
+      );
       if (success) {
         onClose();
         if (redirectTo) {
@@ -83,15 +98,15 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 pt-16">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-gray-900/80 backdrop-blur-md"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl">
+      <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto bg-white dark:bg-zinc-900 rounded-2xl border-4 border-red-500">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -282,6 +297,11 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
                       <div>Email: <span className="font-mono text-zinc-900 dark:text-zinc-100">admin@mentoria.kz</span></div>
                       <div>Пароль: <span className="font-mono text-zinc-900 dark:text-zinc-100">admin123</span></div>
                     </div>
+                  </div>
+                </div>
+                <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-lg">
+                  <div className="text-xs text-blue-700 dark:text-blue-300">
+                    💡 <strong>Для студентов:</strong> Создавайте аккаунт самостоятельно через "Регистрацию", чтобы указать свои уникальные интересы и пройти тест на тип личности для персонализированных рекомендаций.
                   </div>
                 </div>
               </div>

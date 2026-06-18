@@ -14,30 +14,22 @@ import {
   Zap,
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
-import { AuthModal } from "@/components/auth-modal";
 import { useLocale } from "@/contexts/locale-context";
 
 export default function HomePage() {
-  const { user } = useAuth();
+  const { user, setShowAuthModal, setAuthRedirectTo } = useAuth();
   const { t } = useLocale();
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [redirectTo, setRedirectTo] = useState<string | undefined>();
 
   const handleProtectedClick = (e: React.MouseEvent, path: string) => {
     if (!user) {
       e.preventDefault();
-      setRedirectTo(path);
+      setAuthRedirectTo(path);
       setShowAuthModal(true);
     }
   };
 
   return (
     <div className="flex flex-col min-h-screen">
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        redirectTo={redirectTo}
-      />
 
       {/* Hero Section */}
       <section className="pt-16 pb-24">
