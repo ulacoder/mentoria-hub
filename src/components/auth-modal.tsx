@@ -89,9 +89,9 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
         onClick={onClose}
       />
 
-      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] w-[95vw] max-w-[440px] max-h-[90vh] overflow-hidden">
+      <div className="fixed left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 z-[9999] w-[95vw] max-w-[420px] max-h-[85vh] overflow-hidden">
         <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
-          <div className="flex items-center justify-between p-6 border-b border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-zinc-800">
             <h2 className="text-2xl font-bold">
               {mode === "login" ? "Вход" : "Регистрация"}
             </h2>
@@ -103,8 +103,8 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
             </button>
           </div>
 
-          <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div className="overflow-y-auto max-h-[calc(85vh-70px)]">
+            <form onSubmit={handleSubmit} className="p-5 space-y-3">
               {error && (
                 <div className="bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 text-sm p-3 rounded-lg border border-red-200 dark:border-red-900">
                   {error}
