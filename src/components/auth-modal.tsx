@@ -89,7 +89,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
         onClick={onClose}
       />
 
-      <div className="fixed left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 z-[9999] w-[95vw] max-w-[420px] max-h-[85vh] overflow-hidden">
+      <div className="fixed left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 z-[9999] w-[95vw] max-w-[420px] max-h-[80vh] overflow-hidden">
         <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
           <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-zinc-800">
             <h2 className="text-2xl font-bold">
@@ -121,7 +121,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
                         type="text"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full pl-11 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                        className="w-full pl-11 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
                         placeholder="Ваше имя"
                         required
                       />
@@ -142,8 +142,8 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
                           onClick={() => setFormData({ ...formData, role: role.value as any })}
                           className={`p-3 rounded-xl border-2 transition-all ${
                             formData.role === role.value
-                              ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30"
-                              : "border-zinc-200 dark:border-zinc-700 hover:border-blue-300 dark:hover:border-blue-700"
+                              ? "border-purple-500 bg-purple-50 dark:bg-purple-950/30"
+                              : "border-zinc-200 dark:border-zinc-700 hover:border-purple-300 dark:hover:border-purple-700"
                           }`}
                         >
                           <div className="text-2xl mb-1">{role.emoji}</div>
@@ -178,7 +178,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
                               onClick={() => toggleInterest(interest)}
                               className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                                 formData.interests.includes(interest)
-                                  ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
+                                  ? "bg-purple-500 text-white shadow-lg shadow-purple-500/30"
                                   : "bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                               }`}
                             >
@@ -225,7 +225,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
 
               <Button
                 type="submit"
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-medium shadow-lg shadow-blue-500/30 transition-all"
+                className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-xl font-medium shadow-lg shadow-purple-500/30 transition-all"
               >
                 {mode === "login" ? "Войти" : "Зарегистрироваться"}
               </Button>
@@ -240,7 +240,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
                         setMode("register");
                         setError("");
                       }}
-                      className="text-blue-500 hover:text-blue-600 font-medium"
+                      className="text-purple-500 hover:text-purple-600 font-medium"
                     >
                       Зарегистрироваться
                     </button>
@@ -254,7 +254,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
                         setMode("login");
                         setError("");
                       }}
-                      className="text-blue-500 hover:text-blue-600 font-medium"
+                      className="text-purple-500 hover:text-purple-600 font-medium"
                     >
                       Войти
                     </button>
@@ -268,7 +268,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
 
                   <div className="space-y-2">
                     <div className="bg-white dark:bg-zinc-900 p-3 rounded-lg">
-                      <div className="font-medium text-blue-500 mb-1">👨‍🏫 Ментор</div>
+                      <div className="font-medium text-purple-500 mb-1">👨‍🏫 Ментор</div>
                       <div className="text-xs text-zinc-500 space-y-0.5">
                         <div>Email: <span className="font-mono text-zinc-900 dark:text-zinc-100">mentor@mentoria.kz</span></div>
                         <div>Пароль: <span className="font-mono text-zinc-900 dark:text-zinc-100">mentor123</span></div>
@@ -276,7 +276,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
                     </div>
 
                     <div className="bg-white dark:bg-zinc-900 p-3 rounded-lg">
-                      <div className="font-medium text-blue-500 mb-1">⚙️ Администратор</div>
+                      <div className="font-medium text-purple-500 mb-1">⚙️ Администратор</div>
                       <div className="text-xs text-zinc-500 space-y-0.5">
                         <div>Email: <span className="font-mono text-zinc-900 dark:text-zinc-100">admin@mentoria.kz</span></div>
                         <div>Пароль: <span className="font-mono text-zinc-900 dark:text-zinc-100">admin123</span></div>
@@ -287,11 +287,11 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
               )}
 
               {mode === "register" && formData.role === "student" && (
-                <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-900 text-sm">
+                <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-950/30 rounded-xl border border-purple-200 dark:border-purple-900 text-sm">
                   <div className="flex gap-2 items-start">
                     <div className="text-lg">💡</div>
                     <div>
-                      <div className="font-semibold text-blue-600 dark:text-blue-400 mb-1">Для студентов</div>
+                      <div className="font-semibold text-purple-600 dark:text-purple-400 mb-1">Для студентов</div>
                       <div className="text-xs text-zinc-600 dark:text-zinc-400">
                         Создавайте аккаунт самостоятельно, чтобы указать свои интересы и пройти тест на тип личности.
                         Это поможет платформе подобрать для вас персонализированные курсы и менторов!
