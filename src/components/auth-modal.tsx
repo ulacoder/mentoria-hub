@@ -84,13 +84,11 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
 
   return (
     <>
-      <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-md z-[9998]"
-        onClick={onClose}
-      />
-
-      <div className="fixed left-1/2 bottom-[5vh] translate-x-[-50%] z-[9999] w-[95vw] max-w-[400px] max-h-[70vh] overflow-hidden">
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
+      <div className="fixed inset-0 flex items-center justify-center z-[9998] bg-black/60 backdrop-blur-md" onClick={onClose}>
+        <div
+          className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 w-[95vw] max-w-[400px] max-h-[85vh] overflow-hidden m-4"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-zinc-800">
             <h2 className="text-2xl font-bold">
               {mode === "login" ? "Вход" : "Регистрация"}
@@ -103,7 +101,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
             </button>
           </div>
 
-          <div className="overflow-y-auto max-h-[calc(70vh-65px)]">
+          <div className="overflow-y-auto max-h-[calc(85vh-65px)]">
             <form onSubmit={handleSubmit} className="p-5 space-y-3">
               {error && (
                 <div className="bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 text-sm p-3 rounded-lg border border-red-200 dark:border-red-900">
@@ -303,7 +301,6 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
             </form>
           </div>
         </div>
-      </div>
     </>
   );
 }
