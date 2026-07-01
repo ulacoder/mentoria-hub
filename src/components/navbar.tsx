@@ -86,15 +86,17 @@ export function Navbar() {
             <ThemeToggle />
             {user ? (
               <>
-                <Link href="/dashboard">
-                  <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-lg">
+                <Link href="/profile">
+                  <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors cursor-pointer">
                     <Zap className="w-4 h-4 text-primary" />
                     <span className="text-sm font-semibold">{user.coins}</span>
                   </div>
                 </Link>
-                <Button variant="ghost" size="sm" onClick={logout}>
-                  {user.name}
-                </Button>
+                <Link href="/profile">
+                  <Button variant="ghost" size="sm">
+                    {user.name}
+                  </Button>
+                </Link>
               </>
             ) : (
               <>

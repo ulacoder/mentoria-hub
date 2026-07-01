@@ -12,6 +12,8 @@ import {
   Calendar,
   Award,
   Zap,
+  Send,
+  Bell,
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { useLocale } from "@/contexts/locale-context";
@@ -79,6 +81,89 @@ export default function HomePage() {
               <div>
                 <div className="text-2xl font-heading font-semibold">2000+</div>
                 <div className="text-sm text-muted-foreground">{t("home.stats.students")}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Telegram CTA Block */}
+      <section className="py-12 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-card border-2 border-primary/40 rounded-2xl p-8 md:p-12 shadow-lg">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              {/* Icon & Badge */}
+              <div className="flex-shrink-0">
+                <div className="relative">
+                  <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-xl">
+                    <Send className="w-12 h-12 text-white" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center animate-pulse">
+                    <Bell className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 text-center md:text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 mb-3">
+                  <Zap className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-semibold text-primary">Новая фича!</span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-heading font-bold mb-3">
+                  Подключи Telegram бота 🚀
+                </h2>
+                <p className="text-muted-foreground mb-6 max-w-2xl">
+                  Получай мгновенные уведомления о новых возможностях, курсах и изменениях в рейтинге прямо в Telegram!
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+                  <Link
+                    href={user ? "/profile/telegram" : "/login"}
+                    onClick={(e) => {
+                      if (!user) {
+                        e.preventDefault();
+                        setAuthRedirectTo("/profile/telegram");
+                        setShowAuthModal(true);
+                      }
+                    }}
+                  >
+                    <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg">
+                      <Send className="w-5 h-5 mr-2" />
+                      Привязать Telegram
+                    </Button>
+                  </Link>
+                  {user && (
+                    <Link href="/dashboard">
+                      <Button size="lg" variant="outline">
+                        Перейти в дашборд
+                      </Button>
+                    </Link>
+                  )}
+                </div>
+              </div>
+
+              {/* Features List */}
+              <div className="flex-shrink-0">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
+                      <span className="text-primary">✓</span>
+                    </div>
+                    <span>Уведомления о дедлайнах</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
+                      <span className="text-primary">✓</span>
+                    </div>
+                    <span>Новые возможности</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
+                      <span className="text-primary">✓</span>
+                    </div>
+                    <span>Обновления рейтинга</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -127,21 +127,11 @@ export default function LeaderboardPage() {
   const router = useRouter();
   const { user } = useAuth();
 
-  useEffect(() => {
-    if (!user) {
-      router.push("/login");
-    }
-  }, [user, router]);
-
-  if (!user) {
-    return null;
-  }
-
-  const currentUser = {
+  const currentUser = user ? {
     rank: user.rank || 42,
     name: user.name,
     points: 850,
-  };
+  } : null;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -205,24 +195,26 @@ export default function LeaderboardPage() {
             {/* Main Leaderboard */}
             <div className="lg:col-span-2">
               {/* Your Rank */}
-              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-heading font-bold">
-                      #{currentUser.rank}
+              {currentUser && (
+                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-heading font-bold">
+                        #{currentUser.rank}
+                      </div>
+                      <div>
+                        <p className="font-semibold">{currentUser.name} (Вы)</p>
+                        <p className="text-sm text-muted-foreground">{currentUser.points} баллов</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold">{currentUser.name} (Вы)</p>
-                      <p className="text-sm text-muted-foreground">{currentUser.points} баллов</p>
-                    </div>
+                    <Link href="/dashboard">
+                      <Button size="sm" variant="outline">
+                        Мой профиль
+                      </Button>
+                    </Link>
                   </div>
-                  <Link href="/dashboard">
-                    <Button size="sm" variant="outline">
-                      Мой профиль
-                    </Button>
-                  </Link>
                 </div>
-              </div>
+              )}
 
               {/* Top 3 Podium */}
               <div className="grid grid-cols-3 gap-4 mb-8">

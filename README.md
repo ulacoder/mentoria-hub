@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mentoria Hub
 
-## Getting Started
+> Образовательная платформа для поиска возможностей и развития в своём темпе
 
-First, run the development server:
+🌐 **[Открыть платформу](https://mentoria-hub-hazel.vercel.app/)**
+
+## О проекте
+
+**Находи возможности и развивайся в своём темпе** — единая платформа для поиска стипендий, конкурсов, олимпиад и летних программ. Проходи курсы онлайн когда удобно — без привязки к расписанию.
+
+### 📊 В цифрах
+
+- **500+** возможностей
+- **50+** курсов
+- **2000+** учеников
+
+## ✨ Основные возможности
+
+### 🎯 Возможности и курсы в одном месте
+
+- **Конкурсы и олимпиады** — бизнес-конкурсы, научные олимпиады, хакатоны и международные соревнования
+- **Стипендии и гранты** — стипендии, гранты на обучение и финансирование проектов
+- **Летние программы** — международные летние школы, лагеря и исследовательские программы
+- **Асинхронные курсы** — математика, английский, SAT/IELTS, программирование — учись в своём темпе
+
+### 🤖 Telegram бот интеграция
+
+Получай мгновенные уведомления о новых возможностях, курсах и изменениях в рейтинге прямо в Telegram!
+
+✓ Уведомления о дедлайнах  
+✓ Новые возможности  
+✓ Обновления рейтинга
+
+### 🎮 Геймификация и прогресс
+
+- Персональные рекомендации под твои интересы и цели
+- Трекинг прогресса по курсам
+- Система рейтингов и достижений
+- Отслеживание дедлайнов
+
+### 👥 Роли пользователей
+
+- **Студенты** — поиск возможностей, прохождение курсов, отслеживание прогресса
+- **Менторы** — создание курсов, поддержка студентов
+- **Администраторы** — управление платформой, модерация контента
+
+## 🛠 Технологии
+
+- **Frontend:** Next.js 15, React 19, TypeScript
+- **Styling:** Tailwind CSS, shadcn/ui
+- **Backend:** Next.js API Routes, Supabase
+- **Database:** PostgreSQL (Supabase)
+- **Authentication:** Supabase Auth
+- **Telegram Bot:** Node.js, node-telegram-bot-api
+- **Deployment:** Vercel
+
+## 🚀 Запуск проекта
+
+### Установка зависимостей
+
+```bash
+npm install
+```
+
+### Настройка переменных окружения
+
+Создай файл `.env.local`:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token
+```
+
+### Запуск dev сервера
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Открой [http://localhost:3000](http://localhost:3000) в браузере.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Запуск Telegram бота
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+node telegram-bot.js
+```
 
-## Learn More
+## 📂 Структура проекта
 
-To learn more about Next.js, take a look at the following resources:
+```
+mentoria-hub/
+├── src/
+│   ├── app/              # Next.js App Router страницы
+│   ├── components/       # React компоненты
+│   ├── contexts/         # React контексты (Auth)
+│   └── lib/              # Утилиты и хелперы
+├── supabase/             # Database схемы и миграции
+├── public/               # Статические файлы
+├── telegram-bot.js       # Telegram бот
+└── package.json
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎨 Особенности реализации
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Server Components** для оптимальной производительности
+- **Client Components** для интерактивных элементов
+- **API Routes** для backend логики
+- **Real-time updates** через Supabase subscriptions
+- **Responsive design** — работает на всех устройствах
+- **Dark mode ready** — готово к добавлению темной темы
 
-## Deploy on Vercel
+## 🔐 Безопасность
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- JWT authentication через Supabase
+- Row Level Security (RLS) в базе данных
+- Защита API routes через middleware
+- Валидация данных на клиенте и сервере
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📱 Скриншоты
+
+*(Добавь скриншоты платформы здесь)*
+
+## 🤝 Вклад в проект
+
+Проект открыт для улучшений! Если хочешь добавить фичу или исправить баг:
+
+1. Форкни репозиторий
+2. Создай ветку для своей фичи (`git checkout -b feature/amazing-feature`)
+3. Закоммить изменения (`git commit -m 'Add amazing feature'`)
+4. Запуш в ветку (`git push origin feature/amazing-feature`)
+5. Открой Pull Request
+
+## 📄 Лицензия
+
+MIT License - используй свободно для своих проектов!
+
+## 👨‍💻 Автор
+
+**Ulagat Nurtas**  
+[GitHub](https://github.com/ulacoder) • [Email](mailto:ulagatnurtas10@gmail.com)
+
+---
+
+⭐️ Поставь звезду, если проект был полезен!

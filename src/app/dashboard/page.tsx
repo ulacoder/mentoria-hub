@@ -14,6 +14,7 @@ import {
   Target,
   Clock,
   Zap,
+  Send,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { StreakWidget } from "@/components/streak-widget";
@@ -296,6 +297,12 @@ export default function DashboardPage() {
               <section>
                 <h2 className="text-xl font-heading font-bold mb-4">Быстрые действия</h2>
                 <div className="space-y-2">
+                  <Link href="/profile/telegram">
+                    <Button variant="outline" className="w-full justify-start">
+                      <Send className="w-4 h-4 mr-2" />
+                      Настроить Telegram
+                    </Button>
+                  </Link>
                   <Link href="/opportunities">
                     <Button variant="outline" className="w-full justify-start">
                       <Calendar className="w-4 h-4 mr-2" />

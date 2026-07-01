@@ -4,22 +4,70 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Users,
   BookOpen,
   Trophy,
-  Settings,
-  Trash2,
+  LogOut,
   Plus,
-  LogOut
+  Trash2,
+  Edit,
+  X,
 } from "lucide-react";
 
-export default function AdminDashboardPage() {
+type Course = {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  level: string;
+  duration: string;
+  instructor: string;
+  price: number;
+};
+
+type Opportunity = {
+  id: string;
+  title: string;
+  description: string;
+  deadline: string;
+  type: string;
+  link: string;
+};
+
+export default function AdminPage() {
   const router = useRouter();
   const { user, logout } = useAuth();
-  const [users, setUsers] = useState<any[]>([]);
-  const [opportunities, setOpportunities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"courses" | "opportunities">("courses");
+
+  // Courses state
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [showCourseForm, setShowCourseForm] = useState(false);
+  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  const [courseForm, setCourseForm] = useState({
+    title: "",
+    description: "",
+    category: "",
+    level: "",
+    duration: "",
+    instructor: "",
+    price: 0,
+  });
+
+  // Opportunities state
+  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+  const [showOppForm, setShowOppForm] = useState(false);
+  const [editingOpp, setEditingOpp] = useState<Opportunity | null>(null);
+  const [oppForm, setOppForm] = useState({
+    title: "",
+    description: "",
+    deadline: "",
+    type: "",
+    link: "",
+  });
 
   useEffect(() => {
     if (!user) {
@@ -31,64 +79,166 @@ export default function AdminDashboardPage() {
       return;
     }
     loadData();
-  }, [user]);
+  }, [user, router]);
 
   const loadData = async () => {
     try {
-      // Load users
-      const res = await fetch('/api/users');
-      const userData = await res.json();
-      setUsers(userData || []);
+      const [coursesRes, oppsRes] = await Promise.all([
+        fetch("/api/courses"),
+        fetch("/api/opportunities"),
+      ]);
 
-      // Load opportunities
-      if (typeof window !== "undefined") {
-        const opps = JSON.parse(localStorage.getItem("mentoria_opportunities") || "[]");
-        setOpportunities(opps);
-      }
+      const coursesData = await coursesRes.json();
+      const oppsData = await oppsRes.json();
+
+      setCourses(Array.isArray(coursesData) ? coursesData : []);
+      setOpportunities(Array.isArray(oppsData) ? oppsData : []);
     } catch (error) {
-      console.error('Failed to load data:', error);
-      setUsers([]);
+      console.error("Failed to load data:", error);
+      setCourses([]);
       setOpportunities([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const deleteUser = async (userId: string) => {
-    if (!confirm("Удалить этого пользователя?")) return;
+  // Course handlers
+  const handleCourseSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      await fetch(`/api/users?id=${userId}`, { method: 'DELETE' });
+      if (editingCourse) {
+        await fetch("/api/courses", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: editingCourse.id, ...courseForm }),
+        });
+      } else {
+        await fetch("/api/courses", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(courseForm),
+        });
+      }
+      resetCourseForm();
       loadData();
     } catch (error) {
-      console.error('Failed to delete user:', error);
+      console.error("Failed to save course:", error);
     }
   };
 
-  const deleteOpportunity = (oppId: string) => {
-    if (!confirm("Удалить эту возможность?")) return;
-    const updated = opportunities.filter(o => o.id !== oppId);
-    localStorage.setItem("mentoria_opportunities", JSON.stringify(updated));
-    setOpportunities(updated);
+  const deleteCourse = async (id: string) => {
+    if (!confirm("Удалить курс?")) return;
+    try {
+      await fetch(`/api/courses?id=${id}`, { method: "DELETE" });
+      loadData();
+    } catch (error) {
+      console.error("Failed to delete course:", error);
+    }
+  };
+
+  const editCourse = (course: Course) => {
+    setEditingCourse(course);
+    setCourseForm({
+      title: course.title,
+      description: course.description,
+      category: course.category,
+      level: course.level,
+      duration: course.duration,
+      instructor: course.instructor,
+      price: course.price,
+    });
+    setShowCourseForm(true);
+  };
+
+  const resetCourseForm = () => {
+    setShowCourseForm(false);
+    setEditingCourse(null);
+    setCourseForm({
+      title: "",
+      description: "",
+      category: "",
+      level: "",
+      duration: "",
+      instructor: "",
+      price: 0,
+    });
+  };
+
+  // Opportunity handlers
+  const handleOppSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (editingOpp) {
+        await fetch("/api/opportunities", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: editingOpp.id, ...oppForm }),
+        });
+      } else {
+        await fetch("/api/opportunities", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(oppForm),
+        });
+      }
+      resetOppForm();
+      loadData();
+    } catch (error) {
+      console.error("Failed to save opportunity:", error);
+    }
+  };
+
+  const deleteOpp = async (id: string) => {
+    if (!confirm("Удалить возможность?")) return;
+    try {
+      await fetch(`/api/opportunities?id=${id}`, { method: "DELETE" });
+      loadData();
+    } catch (error) {
+      console.error("Failed to delete opportunity:", error);
+    }
+  };
+
+  const editOpp = (opp: Opportunity) => {
+    setEditingOpp(opp);
+    setOppForm({
+      title: opp.title,
+      description: opp.description,
+      deadline: opp.deadline,
+      type: opp.type,
+      link: opp.link,
+    });
+    setShowOppForm(true);
+  };
+
+  const resetOppForm = () => {
+    setShowOppForm(false);
+    setEditingOpp(null);
+    setOppForm({
+      title: "",
+      description: "",
+      deadline: "",
+      type: "",
+      link: "",
+    });
   };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Загрузка...</p>
+        <p>Загрузка...</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Admin Navbar */}
-      <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
-        <div className="flex h-16 items-center px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-1 items-center justify-between">
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <nav className="border-b bg-card">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
             <h1 className="text-xl font-bold text-red-500">ADMIN PANEL</h1>
-
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold">{user?.name}</span>
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium">{user?.name}</span>
               <Button variant="ghost" size="sm" onClick={logout}>
                 <LogOut className="w-4 h-4" />
               </Button>
@@ -97,156 +247,358 @@ export default function AdminDashboardPage() {
         </div>
       </nav>
 
-      <div className="flex-1 bg-muted/20 p-8">
-        <div className="max-w-7xl mx-auto space-y-8">
-          {/* Quick Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-card border rounded-lg p-6">
-              <div className="flex items-center gap-3">
-                <Users className="w-8 h-8 text-blue-500" />
-                <div>
-                  <p className="text-2xl font-bold">{users.length}</p>
-                  <p className="text-sm text-muted-foreground">Пользователей</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-card border rounded-lg p-6">
-              <div className="flex items-center gap-3">
-                <Trophy className="w-8 h-8 text-yellow-500" />
-                <div>
-                  <p className="text-2xl font-bold">{opportunities.length}</p>
-                  <p className="text-sm text-muted-foreground">Возможностей</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-card border rounded-lg p-6">
-              <div className="flex items-center gap-3">
-                <BookOpen className="w-8 h-8 text-green-500" />
-                <div>
-                  <p className="text-2xl font-bold">12</p>
-                  <p className="text-sm text-muted-foreground">Курсов</p>
-                </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-card border rounded-lg p-6">
+            <div className="flex items-center gap-3">
+              <BookOpen className="w-8 h-8 text-blue-500" />
+              <div>
+                <p className="text-3xl font-bold">{courses.length}</p>
+                <p className="text-sm text-muted-foreground">Курсов</p>
               </div>
             </div>
           </div>
-
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Button
-              onClick={() => router.push("/admin/opportunities")}
-              className="h-24 text-lg"
-              variant="outline"
-            >
-              <Trophy className="w-6 h-6 mr-3" />
-              Управление возможностями
-            </Button>
-
-            <Button
-              onClick={() => router.push("/admin/courses")}
-              className="h-24 text-lg"
-              variant="outline"
-            >
-              <BookOpen className="w-6 h-6 mr-3" />
-              Управление курсами
-            </Button>
-          </div>
-
-          {/* Users Table */}
-          <div className="bg-card border rounded-lg overflow-hidden">
-            <div className="p-6 border-b">
-              <h2 className="text-xl font-bold">Пользователи</h2>
+          <div className="bg-card border rounded-lg p-6">
+            <div className="flex items-center gap-3">
+              <Trophy className="w-8 h-8 text-yellow-500" />
+              <div>
+                <p className="text-3xl font-bold">{opportunities.length}</p>
+                <p className="text-sm text-muted-foreground">Возможностей</p>
+              </div>
             </div>
-
-            {users.length === 0 ? (
-              <div className="p-12 text-center text-muted-foreground">
-                <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p>Нет пользователей</p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-muted/50">
-                    <tr>
-                      <th className="text-left px-6 py-3 text-sm font-semibold">Имя</th>
-                      <th className="text-left px-6 py-3 text-sm font-semibold">Email</th>
-                      <th className="text-left px-6 py-3 text-sm font-semibold">Роль</th>
-                      <th className="text-left px-6 py-3 text-sm font-semibold">Коины</th>
-                      <th className="text-right px-6 py-3 text-sm font-semibold">Действия</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {users.map((u) => (
-                      <tr key={u.id} className="hover:bg-muted/20">
-                        <td className="px-6 py-4 text-sm">{u.name}</td>
-                        <td className="px-6 py-4 text-sm text-muted-foreground">{u.email}</td>
-                        <td className="px-6 py-4">
-                          <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                            u.role === "admin" ? "bg-red-500/20 text-red-500" :
-                            u.role === "mentor" ? "bg-blue-500/20 text-blue-500" :
-                            "bg-green-500/20 text-green-500"
-                          }`}>
-                            {u.role}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-sm">{u.coins || 0}</td>
-                        <td className="px-6 py-4 text-right">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => deleteUser(u.id)}
-                          >
-                            <Trash2 className="w-4 h-4 text-red-500" />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
           </div>
+        </div>
 
-          {/* Recent Opportunities */}
-          <div className="bg-card border rounded-lg overflow-hidden">
-            <div className="p-6 border-b flex items-center justify-between">
-              <h2 className="text-xl font-bold">Последние возможности</h2>
+        {/* Tabs */}
+        <div className="flex gap-2 mb-6 border-b">
+          <button
+            onClick={() => setActiveTab("courses")}
+            className={`px-4 py-2 font-medium transition-colors ${
+              activeTab === "courses"
+                ? "text-primary border-b-2 border-primary"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Курсы
+          </button>
+          <button
+            onClick={() => setActiveTab("opportunities")}
+            className={`px-4 py-2 font-medium transition-colors ${
+              activeTab === "opportunities"
+                ? "text-primary border-b-2 border-primary"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Возможности
+          </button>
+        </div>
+
+        {/* Courses Tab */}
+        {activeTab === "courses" && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold">Управление курсами</h2>
               <Button
-                size="sm"
-                onClick={() => router.push("/admin/opportunities")}
+                onClick={() => setShowCourseForm(true)}
+                className="flex items-center gap-2"
               >
-                <Plus className="w-4 h-4 mr-2" />
-                Добавить
+                <Plus className="w-4 h-4" />
+                Добавить курс
               </Button>
             </div>
 
-            {opportunities.length === 0 ? (
-              <div className="p-12 text-center text-muted-foreground">
-                <Trophy className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p>Нет возможностей</p>
-              </div>
-            ) : (
-              <div className="p-6 space-y-4">
-                {opportunities.slice(0, 5).map((opp) => (
-                  <div key={opp.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
-                    <div>
-                      <h3 className="font-semibold">{opp.title}</h3>
-                      <p className="text-sm text-muted-foreground">Дедлайн: {opp.deadline}</p>
-                    </div>
+            {showCourseForm && (
+              <div className="bg-card border rounded-lg p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">
+                    {editingCourse ? "Редактировать курс" : "Новый курс"}
+                  </h3>
+                  <Button variant="ghost" size="sm" onClick={resetCourseForm}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+                <form onSubmit={handleCourseSubmit} className="space-y-4">
+                  <Input
+                    placeholder="Название курса"
+                    value={courseForm.title}
+                    onChange={(e) =>
+                      setCourseForm({ ...courseForm, title: e.target.value })
+                    }
+                    required
+                  />
+                  <Textarea
+                    placeholder="Описание"
+                    value={courseForm.description}
+                    onChange={(e) =>
+                      setCourseForm({ ...courseForm, description: e.target.value })
+                    }
+                    required
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      placeholder="Категория"
+                      value={courseForm.category}
+                      onChange={(e) =>
+                        setCourseForm({ ...courseForm, category: e.target.value })
+                      }
+                      required
+                    />
+                    <Input
+                      placeholder="Уровень"
+                      value={courseForm.level}
+                      onChange={(e) =>
+                        setCourseForm({ ...courseForm, level: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      placeholder="Длительность"
+                      value={courseForm.duration}
+                      onChange={(e) =>
+                        setCourseForm({ ...courseForm, duration: e.target.value })
+                      }
+                      required
+                    />
+                    <Input
+                      placeholder="Инструктор"
+                      value={courseForm.instructor}
+                      onChange={(e) =>
+                        setCourseForm({ ...courseForm, instructor: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <Input
+                    type="number"
+                    placeholder="Цена"
+                    value={courseForm.price}
+                    onChange={(e) =>
+                      setCourseForm({ ...courseForm, price: Number(e.target.value) })
+                    }
+                    required
+                  />
+                  <div className="flex gap-2">
+                    <Button type="submit" className="flex-1">
+                      {editingCourse ? "Сохранить" : "Создать"}
+                    </Button>
                     <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => deleteOpportunity(opp.id)}
+                      type="button"
+                      variant="outline"
+                      onClick={resetCourseForm}
                     >
-                      <Trash2 className="w-4 h-4 text-red-500" />
+                      Отмена
                     </Button>
                   </div>
-                ))}
+                </form>
               </div>
             )}
+
+            <div className="grid gap-4">
+              {courses.length === 0 ? (
+                <div className="bg-card border rounded-lg p-12 text-center">
+                  <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                  <p className="text-muted-foreground">Курсов пока нет</p>
+                </div>
+              ) : (
+                courses.map((course) => (
+                  <div
+                    key={course.id}
+                    className="bg-card border rounded-lg p-6 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold mb-2">{course.title}</h3>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {course.description}
+                        </p>
+                        <div className="flex flex-wrap gap-2 text-xs">
+                          <span className="px-2 py-1 bg-blue-500/10 text-blue-500 rounded">
+                            {course.category}
+                          </span>
+                          <span className="px-2 py-1 bg-green-500/10 text-green-500 rounded">
+                            {course.level}
+                          </span>
+                          <span className="px-2 py-1 bg-purple-500/10 text-purple-500 rounded">
+                            {course.duration}
+                          </span>
+                          <span className="px-2 py-1 bg-orange-500/10 text-orange-500 rounded">
+                            {course.instructor}
+                          </span>
+                          <span className="px-2 py-1 bg-yellow-500/10 text-yellow-500 rounded">
+                            {course.price} ₸
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex gap-2 ml-4">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => editCourse(course)}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteCourse(course.id)}
+                        >
+                          <Trash2 className="w-4 h-4 text-red-500" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Opportunities Tab */}
+        {activeTab === "opportunities" && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold">Управление возможностями</h2>
+              <Button
+                onClick={() => setShowOppForm(true)}
+                className="flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                Добавить возможность
+              </Button>
+            </div>
+
+            {showOppForm && (
+              <div className="bg-card border rounded-lg p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">
+                    {editingOpp ? "Редактировать возможность" : "Новая возможность"}
+                  </h3>
+                  <Button variant="ghost" size="sm" onClick={resetOppForm}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+                <form onSubmit={handleOppSubmit} className="space-y-4">
+                  <Input
+                    placeholder="Название"
+                    value={oppForm.title}
+                    onChange={(e) =>
+                      setOppForm({ ...oppForm, title: e.target.value })
+                    }
+                    required
+                  />
+                  <Textarea
+                    placeholder="Описание"
+                    value={oppForm.description}
+                    onChange={(e) =>
+                      setOppForm({ ...oppForm, description: e.target.value })
+                    }
+                    required
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      placeholder="Дедлайн (например: 31 декабря)"
+                      value={oppForm.deadline}
+                      onChange={(e) =>
+                        setOppForm({ ...oppForm, deadline: e.target.value })
+                      }
+                      required
+                    />
+                    <Input
+                      placeholder="Тип (например: Стипендия, Конкурс)"
+                      value={oppForm.type}
+                      onChange={(e) =>
+                        setOppForm({ ...oppForm, type: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <Input
+                    placeholder="Ссылка"
+                    value={oppForm.link}
+                    onChange={(e) =>
+                      setOppForm({ ...oppForm, link: e.target.value })
+                    }
+                    required
+                  />
+                  <div className="flex gap-2">
+                    <Button type="submit" className="flex-1">
+                      {editingOpp ? "Сохранить" : "Создать"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={resetOppForm}
+                    >
+                      Отмена
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            <div className="grid gap-4">
+              {opportunities.length === 0 ? (
+                <div className="bg-card border rounded-lg p-12 text-center">
+                  <Trophy className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                  <p className="text-muted-foreground">Возможностей пока нет</p>
+                </div>
+              ) : (
+                opportunities.map((opp) => (
+                  <div
+                    key={opp.id}
+                    className="bg-card border rounded-lg p-6 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold mb-2">{opp.title}</h3>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {opp.description}
+                        </p>
+                        <div className="flex flex-wrap gap-2 text-xs mb-2">
+                          <span className="px-2 py-1 bg-purple-500/10 text-purple-500 rounded">
+                            {opp.type}
+                          </span>
+                          <span className="px-2 py-1 bg-red-500/10 text-red-500 rounded">
+                            Дедлайн: {opp.deadline}
+                          </span>
+                        </div>
+                        {opp.link && (
+                          <a
+                            href={opp.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-500 hover:underline"
+                          >
+                            {opp.link}
+                          </a>
+                        )}
+                      </div>
+                      <div className="flex gap-2 ml-4">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => editOpp(opp)}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteOpp(opp.id)}
+                        >
+                          <Trash2 className="w-4 h-4 text-red-500" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

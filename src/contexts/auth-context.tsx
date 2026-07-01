@@ -12,6 +12,7 @@ export interface User {
   rank: number;
   role: "student" | "mentor" | "admin";
   mbti?: string; // MBTI personality type (16 types: INTJ, ENFP, etc.)
+  telegramChatId?: string; // Telegram chat ID for bot notifications
 }
 
 interface AuthContextType {
@@ -36,19 +37,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authRedirectTo, setAuthRedirectTo] = useState<string | null>(null);
 
   useEffect(() => {
-    // Initialize default accounts (mentor & admin)
-    initializeDefaultAccounts();
-
-    // Check localStorage for existing user session
+    // Check localStorage for existing user session FIRST
     const storedUser = localStorage.getItem("mentoria_user");
     if (storedUser) {
       try {
-        setUser(JSON.parse(storedUser));
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
       } catch (error) {
         console.error("Failed to parse user data:", error);
         localStorage.removeItem("mentoria_user");
       }
     }
+
+    // Initialize default accounts (mentor & admin)
+    initializeDefaultAccounts();
+
     setIsLoading(false);
   }, []);
 
