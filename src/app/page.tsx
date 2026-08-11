@@ -75,92 +75,58 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right: Interactive Scorer */}
+            {/* Right: CTA Card */}
             <div className="relative">
               <div className="bg-card border border-border rounded-2xl p-8 shadow-2xl">
                 <div className="mb-6">
                   <h3 className="text-2xl font-heading font-bold mb-2">
-                    Быстрая оценка профиля
+                    Получи полную оценку профиля
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Введи базовые данные и получи предварительный score
+                    AI анализирует твои оценки, внеклассные активности, тесты и генерирует персонализированный план поступления
                   </p>
                 </div>
-                <div className="space-y-4 mb-6">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">
-                      GPA (из 4.0)
-                    </label>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      max="4.00"
-                      placeholder="3.85"
-                      value={gpa}
-                      onChange={(e) => {
-                        setGpa(e.target.value);
-                        setShowQuickScore(false);
-                      }}
-                      className="h-12 text-lg"
-                    />
-                  </div>
 
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">
-                      SAT Score
-                    </label>
-                    <Input
-                      type="number"
-                      max="1600"
-                      placeholder="1450"
-                      value={sat}
-                      onChange={(e) => {
-                        setSat(e.target.value);
-                        setShowQuickScore(false);
-                      }}
-                      className="h-12 text-lg"
-                    />
-                  </div>
-                </div>
-
-                {showQuickScore && gpa && sat ? (
-                  <div className="mb-6 p-6 bg-primary/5 border border-primary/20 rounded-xl">
-                    <div className="text-center">
-                      <div className="text-sm text-muted-foreground mb-2">
-                        Предварительный Score
-                      </div>
-                      <div className="text-5xl font-heading font-bold text-primary mb-2">
-                        {calculateQuickScore()}
-                        <span className="text-2xl text-muted-foreground">/100</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {calculateQuickScore() >= 80 ? "Сильный профиль" :
-                         calculateQuickScore() >= 60 ? "Средний профиль" :
-                         "Нужно улучшить"}
-                      </p>
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle className="w-4 h-4 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-sm mb-1">Profile Score 0-100</div>
+                      <div className="text-xs text-muted-foreground">Academic, Extracurricular, Essay, Recommendation scores</div>
                     </div>
                   </div>
-                ) : null}
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle className="w-4 h-4 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-sm mb-1">College List</div>
+                      <div className="text-xs text-muted-foreground">Reach, Target, Safety schools под твой профиль</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle className="w-4 h-4 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-sm mb-1">Персонализированный Roadmap</div>
+                      <div className="text-xs text-muted-foreground">Что улучшить, какие курсы взять, куда применить</div>
+                    </div>
+                  </div>
+                </div>
 
                 <Button
                   size="lg"
                   className="w-full h-12 text-base"
-                  onClick={() => {
-                    if (!showQuickScore && gpa && sat) {
-                      setShowQuickScore(true);
-                    } else {
-                      handleGetFullAnalysis();
-                    }
-                  }}
-                  disabled={!gpa || !sat}
+                  onClick={handleGetFullAnalysis}
                 >
-                  {showQuickScore ? "Получить полный анализ" : "Узнать свой score"}
+                  Начать оценку бесплатно
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
-
-                <p className="text-xs text-center text-muted-foreground mt-4">
-                  Полный анализ включает: список вузов, персонализированный roadmap, gap analysis
-                </p>
               </div>
             </div>
           </div>
