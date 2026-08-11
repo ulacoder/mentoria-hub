@@ -3,9 +3,7 @@ import { Space_Grotesk, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/auth-context";
 import { LocaleProvider } from "@/contexts/locale-context";
-import { NaviMentor } from "@/components/navi-mentor";
 import { Navbar } from "@/components/navbar";
-import { CalendarWidget } from "@/components/calendar-widget";
 import { GlobalAuthModal } from "@/components/global-auth-modal";
 
 const spaceGrotesk = Space_Grotesk({
@@ -47,8 +45,6 @@ export default function RootLayout({
             <main className="flex-1">
               {children}
             </main>
-            <NaviMentor />
-            <CalendarWidget />
             <GlobalAuthModal />
           </AuthProvider>
         </LocaleProvider>

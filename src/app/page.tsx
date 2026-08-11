@@ -86,7 +86,6 @@ export default function HomePage() {
                     Введи базовые данные и получи предварительный score
                   </p>
                 </div>
-
                 <div className="space-y-4 mb-6">
                   <div>
                     <label className="text-sm font-medium mb-2 block">
@@ -163,39 +162,6 @@ export default function HomePage() {
                   Полный анализ включает: список вузов, персонализированный roadmap, gap analysis
                 </p>
               </div>
-
-              {/* Floating stats */}
-              <div className="absolute -bottom-6 -left-6 bg-card border border-border rounded-xl p-4 shadow-lg hidden lg:block">
-                <div className="text-2xl font-heading font-bold">2,847</div>
-                <div className="text-sm text-muted-foreground">студентов из СНГ</div>
-              </div>
-
-              <div className="absolute -top-6 -right-6 bg-card border border-border rounded-xl p-4 shadow-lg hidden lg:block">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                  <div className="text-sm font-medium">Live assessment</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="py-16 border-y border-border/40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-heading font-bold mb-2">2,847</div>
-              <div className="text-sm text-muted-foreground">Студентов улучшили профиль</div>
-            </div>
-            <div>
-              <div className="text-4xl font-heading font-bold mb-2">87%</div>
-              <div className="text-sm text-muted-foreground">Увеличили шансы на +20%</div>
-            </div>
-            <div>
-              <div className="text-4xl font-heading font-bold mb-2">$2.4M</div>
-              <div className="text-sm text-muted-foreground">В стипендиях получено</div>
             </div>
           </div>
         </div>
@@ -271,7 +237,7 @@ export default function HomePage() {
             Начни прямо сейчас
           </h2>
           <p className="text-xl text-muted-foreground mb-8">
-            2,847 студентов уже улучшили свои шансы. Ты следующий?
+            Оцени свой профиль бесплатно и получи персонализированный roadmap
           </p>
           <Button
             size="lg"
