@@ -37,27 +37,22 @@ export function Navbar() {
           <Logo />
 
           <div className="hidden md:flex items-center gap-6">
-            <Link
-              href="/profile/setup"
-              className="text-sm font-medium hover:text-primary transition-colors"
-              onClick={(e) => handleProtectedClick(e, "/profile/setup")}
-            >
-              Оценить профиль
-            </Link>
-            <Link
-              href="/roadmap"
-              className="text-sm font-medium hover:text-primary transition-colors"
-              onClick={(e) => handleProtectedClick(e, "/roadmap")}
-            >
-              Твой roadmap
-            </Link>
-            <Link
-              href="/opportunities"
-              className="text-sm font-medium hover:text-primary transition-colors"
-              onClick={(e) => handleProtectedClick(e, "/opportunities")}
-            >
-              Возможности
-            </Link>
+            {user && (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="text-sm font-medium hover:text-primary transition-colors"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/roadmap"
+                  className="text-sm font-medium hover:text-primary transition-colors"
+                >
+                  Roadmap
+                </Link>
+              </>
+            )}
           </div>
 
           <div className="flex items-center gap-3">

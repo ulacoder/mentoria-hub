@@ -1,0 +1,206 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ── SEO / sharing meta ─────────────────────────────────────────
+         This file is the served shell for EVERY route (vercel.json
+         rewrites all non-file paths to /), so the static tags below
+         describe the root landing — the primary indexable surface.
+         Two layers refine them:
+           • build time — scripts/postbuild-seo.mjs writes per-route
+             copies (dist/start/index.html, …) with these tags swapped,
+             so non-JS crawlers and social scrapers get correct
+             per-route meta (static files win over the SPA rewrite);
+           • runtime — src/components/Seo.tsx keeps title/canonical/
+             robots in sync on SPA navigation for JS-rendering bots
+             (Googlebot/Bingbot) and noindexes private surfaces.
+         The postbuild script string-matches these exact tags — if you
+         reformat them, update ROUTE_META replacements there too. -->
+    <title>1609plus - AI College Application Assistant</title>
+    <meta name="description" content="Your journey to a top US university, decoded by AI. Weekly profile reviews, a personalized roadmap, and a college list built from your real chances." />
+    <meta name="author" content="1609plus" />
+    <link rel="canonical" href="https://1609plus.com/" />
+
+    <meta property="og:site_name" content="1609plus" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="https://1609plus.com/" />
+    <meta property="og:title" content="1609plus - AI College Application Assistant" />
+    <meta property="og:description" content="Your journey to a top US university, decoded by AI. Weekly profile reviews, a personalized roadmap, and a college list built from your real chances." />
+    <!-- 1200×630 JPEG (~70 KB) derived from public/aura500.png (the
+         full-res 3840×2160 original). Social scrapers time out or skip
+         multi-MB images, hence the compressed derivative. Absolute URL
+         required — scrapers don't resolve relative image paths. -->
+    <meta property="og:image" content="https://1609plus.com/og-image.jpg" />
+    <meta property="og:image:secure_url" content="https://1609plus.com/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="1609+ logo on a dark blueprint grid with university crests" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="1609plus - AI College Application Assistant" />
+    <meta name="twitter:description" content="Your journey to a top US university, decoded by AI. Weekly profile reviews, a personalized roadmap, and a college list built from your real chances." />
+    <meta name="twitter:image" content="https://1609plus.com/og-image.jpg" />
+    <meta name="twitter:image:alt" content="1609+ logo on a dark blueprint grid with university crests" />
+
+    <!-- Structured data. Stable org/site facts only — nothing that
+         drifts (no ratings, no per-plan copy). Pricing bounds mirror
+         src/constants/payments.ts PLAN_PRICE_USD (free tier → Pro $15);
+         keep in sync if plans change. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://1609plus.com/#organization",
+          "name": "1609plus",
+          "url": "https://1609plus.com/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://1609plus.com/Plus200PNG.png"
+          },
+          "email": "info@1609plus.com",
+          "sameAs": ["https://t.me/plus1609"]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://1609plus.com/#website",
+          "url": "https://1609plus.com/",
+          "name": "1609plus",
+          "description": "Your journey to a top US university, decoded by AI. Weekly profile reviews, a personalized roadmap, and a college list built from your real chances.",
+          "inLanguage": "en",
+          "publisher": { "@id": "https://1609plus.com/#organization" }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://1609plus.com/#app",
+          "name": "1609plus",
+          "url": "https://1609plus.com/",
+          "description": "AI college application assistant: profile scoring, a personalized admissions roadmap, essay tools, and comparison against 400+ historical applicants to top US universities.",
+          "applicationCategory": "EducationalApplication",
+          "operatingSystem": "Web",
+          "image": "https://1609plus.com/og-image.jpg",
+          "publisher": { "@id": "https://1609plus.com/#organization" },
+          "offers": {
+            "@type": "AggregateOffer",
+            "lowPrice": "0",
+            "highPrice": "15",
+            "priceCurrency": "USD"
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Plausible — privacy-friendly aggregate analytics. Loads
+         async; the inline shim queues events via `window.plausible`
+         until the remote script registers its real implementation.
+         Plausible's tracker hooks the History API natively, so SPA
+         route changes (which our React Router does without page
+         reloads) are auto-tracked — no extra glue needed.
+         Site-id is encoded in the script URL itself. -->
+    <script async src="https://plausible.io/js/pa-Bzs6nCrVeV7ElkCT0cCWf.js"></script>
+    <script>
+      window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+      plausible.init()
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/png" href="/Plus200PNG.png?v=2" />
+    <link rel="apple-touch-icon" href="/Plus200PNG.png?v=2" />
+
+    <!-- Pre-React paint. The production bundle is large (heavy
+         obfuscation + every Radix UI component + Recharts + Three.js)
+         and on a cold cache the user sees a blank #root div for 1-3
+         seconds while the JS downloads + executes. That blank state
+         reads as "the site is broken" — especially because our CSS
+         paints the body dark immediately, so users see "dark blue
+         nothing" until React mounts.
+
+         This inline loader lives inside #root. When React's
+         createRoot() runs in main.tsx it replaces the entire
+         children of #root with the rendered app, so the loader
+         disappears automatically — no JS hook needed to remove it.
+
+         Styles are inline so they don't depend on the external
+         CSS bundle (which is part of what we're waiting on). Same
+         visual language as the in-app loaders (RootRedirect,
+         PlatformLayout): centered ring spinner over dark canvas. -->
+    <style>
+      html, body { background-color: #0a0d15; margin: 0; }
+      @keyframes app-preloader-spin {
+        to { transform: rotate(360deg); }
+      }
+      .app-preloader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #0a0d15;
+        z-index: 0;
+      }
+      .app-preloader-inner { text-align: center; }
+      .app-preloader-spinner {
+        width: 32px;
+        height: 32px;
+        margin: 0 auto 16px;
+        border: 2px solid rgba(255, 255, 255, 0.15);
+        border-top-color: rgba(255, 255, 255, 0.95);
+        border-radius: 50%;
+        animation: app-preloader-spin 0.8s linear infinite;
+      }
+      .app-preloader-text {
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 14px;
+        font-family: Geist, system-ui, -apple-system, sans-serif;
+        letter-spacing: -0.01em;
+      }
+    </style>
+    <script type="module" crossorigin src="/_2297d8/FkFJ2t12.js"></script>
+    <link rel="stylesheet" crossorigin href="/_2297d8/DKvpDRwS.css">
+  </head>
+
+  <body>
+    <div id="root">
+      <div class="app-preloader">
+        <div class="app-preloader-inner">
+          <div class="app-preloader-spinner"></div>
+          <div class="app-preloader-text">Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crawlable fallback for non-JS user agents (and the rare
+         no-JS visitor). The app itself is client-rendered; Googlebot
+         and Bingbot execute JS and index the real pages, but plainer
+         crawlers see only this shell — so give them the landing's
+         actual pitch and the two entry links. Mirrors the NewLanding
+         hero copy — keep in sync if that hero changes. -->
+    <noscript>
+      <div style="max-width: 640px; margin: 0 auto; padding: 96px 24px; font-family: Geist, system-ui, -apple-system, sans-serif; color: #c7d3e0; text-align: center;">
+        <h1 style="font-size: 40px; line-height: 1.05; letter-spacing: -0.03em; font-weight: 500; margin: 0 0 20px;">Your journey to top universities, simplified</h1>
+        <p style="font-size: 17px; line-height: 1.55; letter-spacing: -0.01em; margin: 0 0 28px; color: rgba(199, 211, 224, 0.8);">1609plus scores your profile like an admissions officer would, builds your personalized admissions roadmap, and shows you where you really stand against 400+ historical applicants to top US universities.</p>
+        <p style="font-size: 16px; margin: 0 0 28px;">
+          <a href="/start" style="color: #9aabff;">Get your free AI profile evaluation</a>
+          &nbsp;·&nbsp;
+          <a href="/auth" style="color: #9aabff;">Sign in</a>
+          &nbsp;·&nbsp;
+          <a href="mailto:info@1609plus.com" style="color: #9aabff;">info@1609plus.com</a>
+        </p>
+        <p style="font-size: 14px; color: rgba(199, 211, 224, 0.5);">1609plus is an interactive web app and needs JavaScript enabled to run.</p>
+      </div>
+    </noscript>
+
+  </body>
+</html>
+
