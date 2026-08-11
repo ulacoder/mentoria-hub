@@ -48,76 +48,76 @@
 }
 
 :root {
-  /* Mentoria Hub Design System - Light Mode */
-  --background: oklch(0.98 0.01 280); /* Light purple-tinted white */
-  --foreground: oklch(0.15 0.05 280); /* Dark purple text */
-  --card: oklch(1 0 0); /* Pure white cards */
-  --card-foreground: oklch(0.15 0.05 280);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.05 280);
-  --primary: oklch(0.65 0.25 293); /* #8B5CF6 - Vibrant Purple */
-  --primary-foreground: oklch(0.98 0.01 280);
-  --secondary: oklch(0.60 0.20 145); /* #10B981 - Vibrant Green */
-  --secondary-foreground: oklch(0.98 0.01 280);
-  --muted: oklch(0.95 0.01 280); /* Light purple-gray */
-  --muted-foreground: oklch(0.45 0.03 280);
-  --accent: oklch(0.60 0.20 145); /* Green accent */
-  --accent-foreground: oklch(0.98 0.01 280);
-  --destructive: oklch(0.60 0.25 30); /* Red */
-  --destructive-foreground: oklch(0.98 0.01 280);
-  --border: oklch(0.75 0.08 293); /* Light purple border */
-  --input: oklch(0.85 0.05 280);
-  --ring: oklch(0.65 0.25 293); /* Purple ring */
-  --chart-1: oklch(0.65 0.25 293); /* Purple */
-  --chart-2: oklch(0.60 0.20 145); /* Green */
-  --chart-3: oklch(0.70 0.20 280); /* Light purple */
-  --chart-4: oklch(0.65 0.18 160); /* Light green */
-  --chart-5: oklch(0.50 0.15 30); /* Orange-red */
-  --radius: 0.75rem;
-  --sidebar: oklch(0.98 0.01 280);
-  --sidebar-foreground: oklch(0.15 0.05 280);
-  --sidebar-primary: oklch(0.65 0.25 293);
-  --sidebar-primary-foreground: oklch(0.98 0.01 280);
-  --sidebar-accent: oklch(0.95 0.01 280);
-  --sidebar-accent-foreground: oklch(0.15 0.05 280);
-  --sidebar-border: oklch(0.75 0.08 293);
-  --sidebar-ring: oklch(0.65 0.25 293);
+  /* Applyze Design System - Light Mode (fallback) */
+  --background: #FFFFFF;
+  --foreground: #0A0E1A;
+  --card: #F8FAFC;
+  --card-foreground: #0A0E1A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0A0E1A;
+  --primary: #3B82F6;
+  --primary-foreground: #FFFFFF;
+  --secondary: #60A5FA;
+  --secondary-foreground: #FFFFFF;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --accent: #10B981;
+  --accent-foreground: #FFFFFF;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #3B82F6;
+  --chart-1: #3B82F6;
+  --chart-2: #10B981;
+  --chart-3: #60A5FA;
+  --chart-4: #34D399;
+  --chart-5: #F59E0B;
+  --radius: 0.5rem;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #0A0E1A;
+  --sidebar-primary: #3B82F6;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F1F5F9;
+  --sidebar-accent-foreground: #0A0E1A;
+  --sidebar-border: #E2E8F0;
+  --sidebar-ring: #3B82F6;
 }
 
 .dark {
-  /* Mentoria Hub Design System - Dark Mode */
-  --background: oklch(0.18 0.05 280); /* Dark purple background */
-  --foreground: oklch(0.95 0.01 280); /* Light purple-white text */
-  --card: oklch(0.22 0.06 285); /* Dark purple cards */
-  --card-foreground: oklch(0.95 0.01 280);
-  --popover: oklch(0.20 0.05 280);
-  --popover-foreground: oklch(0.95 0.01 280);
-  --primary: oklch(0.70 0.28 293); /* Brighter purple for dark mode */
-  --primary-foreground: oklch(0.98 0.01 280);
-  --secondary: oklch(0.65 0.22 145); /* Brighter green for dark mode */
-  --secondary-foreground: oklch(0.98 0.01 280);
-  --muted: oklch(0.25 0.05 285); /* Dark purple-gray */
-  --muted-foreground: oklch(0.60 0.03 280);
-  --accent: oklch(0.65 0.22 145); /* Green accent */
-  --accent-foreground: oklch(0.98 0.01 280);
-  --destructive: oklch(0.65 0.28 30); /* Brighter red */
-  --destructive-foreground: oklch(0.98 0.01 280);
-  --border: oklch(0.40 0.12 293); /* Purple border */
-  --input: oklch(0.30 0.08 285);
-  --ring: oklch(0.70 0.28 293); /* Bright purple ring */
-  --chart-1: oklch(0.70 0.28 293);
-  --chart-2: oklch(0.65 0.22 145);
-  --chart-3: oklch(0.75 0.22 280);
-  --chart-4: oklch(0.70 0.20 160);
-  --chart-5: oklch(0.60 0.20 30);
-  --sidebar: oklch(0.20 0.05 280);
-  --sidebar-foreground: oklch(0.95 0.01 280);
-  --sidebar-primary: oklch(0.70 0.28 293);
-  --sidebar-primary-foreground: oklch(0.98 0.01 280);
-  --sidebar-accent: oklch(0.25 0.05 285);
-  --sidebar-accent-foreground: oklch(0.95 0.01 280);
-  --sidebar-border: oklch(0.40 0.12 293);
-  --sidebar-ring: oklch(0.70 0.28 293);
+  /* Applyze Design System - Dark Blue Minimal */
+  --background: #0A0E1A; /* Deep blue-black background */
+  --foreground: #FFFFFF; /* Pure white text */
+  --card: #141B2E; /* Card surface - slightly lighter */
+  --card-foreground: #FFFFFF;
+  --popover: #141B2E;
+  --popover-foreground: #FFFFFF;
+  --primary: #3B82F6; /* Bright blue */
+  --primary-foreground: #FFFFFF;
+  --secondary: #60A5FA; /* Lighter blue for hover */
+  --secondary-foreground: #FFFFFF;
+  --muted: #1E293B; /* Muted elements */
+  --muted-foreground: #94A3B8; /* Gray-blue text */
+  --accent: #10B981; /* Green for success/improvement */
+  --accent-foreground: #FFFFFF;
+  --destructive: #EF4444; /* Red */
+  --destructive-foreground: #FFFFFF;
+  --border: #1E293B; /* Subtle borders */
+  --input: #1E293B;
+  --ring: #3B82F6; /* Blue focus ring */
+  --chart-1: #3B82F6;
+  --chart-2: #10B981;
+  --chart-3: #60A5FA;
+  --chart-4: #34D399;
+  --chart-5: #F59E0B;
+  --sidebar: #141B2E;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #3B82F6;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #1E293B;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #1E293B;
+  --sidebar-ring: #3B82F6;
 }
 
 @layer base {
@@ -132,21 +132,21 @@
   }
 }
 
-/* Custom gradients for Mentoria Hub - Purple/Green theme */
+/* Custom gradients for Applyze - Blue theme */
 @layer utilities {
   .gradient-primary {
-    background: linear-gradient(135deg, #8B5CF6 0%, #10B981 100%);
+    background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
   }
 
   .gradient-accent {
-    background: linear-gradient(135deg, #10B981 0%, #8B5CF6 100%);
+    background: linear-gradient(135deg, #10B981 0%, #3B82F6 100%);
   }
 
-  .gradient-purple {
-    background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%);
+  .gradient-blue {
+    background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
   }
 
-  .gradient-green {
+  .gradient-success {
     background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
   }
 

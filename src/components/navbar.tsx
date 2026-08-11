@@ -38,65 +38,39 @@ export function Navbar() {
 
           <div className="hidden md:flex items-center gap-6">
             <Link
+              href="/profile/setup"
+              className="text-sm font-medium hover:text-primary transition-colors"
+              onClick={(e) => handleProtectedClick(e, "/profile/setup")}
+            >
+              Оценить профиль
+            </Link>
+            <Link
+              href="/roadmap"
+              className="text-sm font-medium hover:text-primary transition-colors"
+              onClick={(e) => handleProtectedClick(e, "/roadmap")}
+            >
+              Твой roadmap
+            </Link>
+            <Link
               href="/opportunities"
               className="text-sm font-medium hover:text-primary transition-colors"
               onClick={(e) => handleProtectedClick(e, "/opportunities")}
             >
               Возможности
             </Link>
-            <Link
-              href="/courses"
-              className="text-sm font-medium hover:text-primary transition-colors"
-              onClick={(e) => handleProtectedClick(e, "/courses")}
-            >
-              Курсы
-            </Link>
-            <Link href="/roadmap" className="text-sm font-medium hover:text-primary transition-colors">
-              Твой путь
-            </Link>
-            <Link href="/profile/mbti" className="text-sm font-medium hover:text-primary transition-colors">
-              Личность
-            </Link>
-            <Link href="/messages" className="text-sm font-medium hover:text-primary transition-colors">
-              Сообщения
-            </Link>
-            <Link href="/game" className="text-sm font-medium hover:text-primary transition-colors">
-              🎮 Игра
-            </Link>
-            <Link href="/shop" className="text-sm font-medium hover:text-primary transition-colors">
-              Магазин
-            </Link>
-            <Link href="/leaderboard" className="text-sm font-medium hover:text-primary transition-colors">
-              Лидерборд
-            </Link>
-            {user?.role === "mentor" && (
-              <Link href="/mentor" className="text-sm font-medium hover:text-primary transition-colors">
-                Ученики
-              </Link>
-            )}
-            {user?.role === "admin" && (
-              <Link href="/admin" className="text-sm font-medium hover:text-primary transition-colors">
-                Админ панель
-              </Link>
-            )}
           </div>
 
           <div className="flex items-center gap-3">
-            <LanguageSwitcher />
-            <ThemeToggle />
             {user ? (
               <>
-                <Link href="/profile">
-                  <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors cursor-pointer">
-                    <Zap className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-semibold">{user.coins}</span>
-                  </div>
-                </Link>
                 <Link href="/profile">
                   <Button variant="ghost" size="sm">
                     {user.name}
                   </Button>
                 </Link>
+                <Button variant="ghost" size="sm" onClick={logout}>
+                  Выйти
+                </Button>
               </>
             ) : (
               <>

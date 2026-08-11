@@ -3,166 +3,177 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   GraduationCap,
-  Trophy,
-  BookOpen,
+  TrendingUp,
   Target,
-  Users,
-  Calendar,
-  Award,
-  Zap,
-  Send,
-  Bell,
+  CheckCircle,
+  ArrowRight,
+  Sparkles,
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
-import { useLocale } from "@/contexts/locale-context";
 
 export default function HomePage() {
   const { user, setShowAuthModal, setAuthRedirectTo } = useAuth();
-  const { t } = useLocale();
+  const [gpa, setGpa] = useState("");
+  const [sat, setSat] = useState("");
+  const [showQuickScore, setShowQuickScore] = useState(false);
 
-  const handleProtectedClick = (e: React.MouseEvent, path: string) => {
+  const calculateQuickScore = () => {
+    if (!gpa || !sat) return 0;
+    const gpaScore = (parseFloat(gpa) / 4.0) * 40;
+    const satScore = (parseInt(sat) / 1600) * 60;
+    return Math.round(gpaScore + satScore);
+  };
+
+  const handleGetFullAnalysis = () => {
     if (!user) {
-      e.preventDefault();
-      setAuthRedirectTo(path);
+      setAuthRedirectTo("/profile/setup");
       setShowAuthModal(true);
+    } else {
+      window.location.href = "/profile/setup";
     }
   };
 
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Hero Section with Interactive Scorer */}
+      <section className="pt-20 pb-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
 
-      {/* Hero Section */}
-      <section className="pt-16 pb-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 mb-6">
-              <span className="text-sm font-medium text-primary">{t("home.platform_badge")}</span>
-            </div>
-
-            <h1 className="text-4xl md:text-5xl font-heading font-bold mb-6 leading-tight whitespace-pre-line">
-              {t("home.hero_title")}
-            </h1>
-
-            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              {t("home.hero_subtitle")}
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 mb-12">
-              <Link
-                href="/opportunities"
-                onClick={(e) => handleProtectedClick(e, "/opportunities")}
-              >
-                <Button size="lg" className="bg-primary hover:bg-primary/90 text-white">
-                  {t("home.find_opportunities")}
-                </Button>
-              </Link>
-              <Link
-                href="/courses"
-                onClick={(e) => handleProtectedClick(e, "/courses")}
-              >
-                <Button size="lg" variant="outline">
-                  {t("home.view_courses")}
-                </Button>
-              </Link>
-            </div>
-
-            {/* Stats */}
-            <div className="flex gap-12 pt-8 border-t border-border/40">
-              <div>
-                <div className="text-2xl font-heading font-semibold">500+</div>
-                <div className="text-sm text-muted-foreground">{t("home.stats.opportunities")}</div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left: Value Prop */}
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
+                <Sparkles className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium text-primary">AI-powered profile assessment</span>
               </div>
-              <div>
-                <div className="text-2xl font-heading font-semibold">50+</div>
-                <div className="text-sm text-muted-foreground">{t("home.stats.courses")}</div>
-              </div>
-              <div>
-                <div className="text-2xl font-heading font-semibold">2000+</div>
-                <div className="text-sm text-muted-foreground">{t("home.stats.students")}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Telegram CTA Block */}
-      <section className="py-12 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-card border-2 border-primary/40 rounded-2xl p-8 md:p-12 shadow-lg">
-            <div className="flex flex-col md:flex-row items-center gap-8">
-              {/* Icon & Badge */}
-              <div className="flex-shrink-0">
-                <div className="relative">
-                  <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-xl">
-                    <Send className="w-12 h-12 text-white" />
-                  </div>
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center animate-pulse">
-                    <Bell className="w-4 h-4 text-white" />
-                  </div>
+              <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6 leading-tight">
+                Узнай свои реальные шансы на топ вузы
+              </h1>
+
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+                AI оценивает твой профиль как admission officer и показывает, что нужно улучшить до дедлайнов.
+              </p>
+
+              <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-accent" />
+                  <span>Бесплатно</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-accent" />
+                  <span>5 минут</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-accent" />
+                  <span>Персонализированно</span>
                 </div>
               </div>
+            </div>
 
-              {/* Content */}
-              <div className="flex-1 text-center md:text-left">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 mb-3">
-                  <Zap className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-semibold text-primary">Новая фича!</span>
+            {/* Right: Interactive Scorer */}
+            <div className="relative">
+              <div className="bg-card border border-border rounded-2xl p-8 shadow-2xl">
+                <div className="mb-6">
+                  <h3 className="text-2xl font-heading font-bold mb-2">
+                    Быстрая оценка профиля
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Введи базовые данные и получи предварительный score
+                  </p>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-heading font-bold mb-3">
-                  Подключи Telegram бота 🚀
-                </h2>
-                <p className="text-muted-foreground mb-6 max-w-2xl">
-                  Получай мгновенные уведомления о новых возможностях, курсах и изменениях в рейтинге прямо в Telegram!
+
+                <div className="space-y-4 mb-6">
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      GPA (из 4.0)
+                    </label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      max="4.00"
+                      placeholder="3.85"
+                      value={gpa}
+                      onChange={(e) => {
+                        setGpa(e.target.value);
+                        setShowQuickScore(false);
+                      }}
+                      className="h-12 text-lg"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      SAT Score
+                    </label>
+                    <Input
+                      type="number"
+                      max="1600"
+                      placeholder="1450"
+                      value={sat}
+                      onChange={(e) => {
+                        setSat(e.target.value);
+                        setShowQuickScore(false);
+                      }}
+                      className="h-12 text-lg"
+                    />
+                  </div>
+                </div>
+
+                {showQuickScore && gpa && sat ? (
+                  <div className="mb-6 p-6 bg-primary/5 border border-primary/20 rounded-xl">
+                    <div className="text-center">
+                      <div className="text-sm text-muted-foreground mb-2">
+                        Предварительный Score
+                      </div>
+                      <div className="text-5xl font-heading font-bold text-primary mb-2">
+                        {calculateQuickScore()}
+                        <span className="text-2xl text-muted-foreground">/100</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {calculateQuickScore() >= 80 ? "Сильный профиль" :
+                         calculateQuickScore() >= 60 ? "Средний профиль" :
+                         "Нужно улучшить"}
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
+
+                <Button
+                  size="lg"
+                  className="w-full h-12 text-base"
+                  onClick={() => {
+                    if (!showQuickScore && gpa && sat) {
+                      setShowQuickScore(true);
+                    } else {
+                      handleGetFullAnalysis();
+                    }
+                  }}
+                  disabled={!gpa || !sat}
+                >
+                  {showQuickScore ? "Получить полный анализ" : "Узнать свой score"}
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+
+                <p className="text-xs text-center text-muted-foreground mt-4">
+                  Полный анализ включает: список вузов, персонализированный roadmap, gap analysis
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
-                  <Link
-                    href={user ? "/profile/telegram" : "/login"}
-                    onClick={(e) => {
-                      if (!user) {
-                        e.preventDefault();
-                        setAuthRedirectTo("/profile/telegram");
-                        setShowAuthModal(true);
-                      }
-                    }}
-                  >
-                    <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg">
-                      <Send className="w-5 h-5 mr-2" />
-                      Привязать Telegram
-                    </Button>
-                  </Link>
-                  {user && (
-                    <Link href="/dashboard">
-                      <Button size="lg" variant="outline">
-                        Перейти в дашборд
-                      </Button>
-                    </Link>
-                  )}
-                </div>
               </div>
 
-              {/* Features List */}
-              <div className="flex-shrink-0">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
-                      <span className="text-primary">✓</span>
-                    </div>
-                    <span>Уведомления о дедлайнах</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
-                      <span className="text-primary">✓</span>
-                    </div>
-                    <span>Новые возможности</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
-                      <span className="text-primary">✓</span>
-                    </div>
-                    <span>Обновления рейтинга</span>
-                  </div>
+              {/* Floating stats */}
+              <div className="absolute -bottom-6 -left-6 bg-card border border-border rounded-xl p-4 shadow-lg hidden lg:block">
+                <div className="text-2xl font-heading font-bold">2,847</div>
+                <div className="text-sm text-muted-foreground">студентов из СНГ</div>
+              </div>
+
+              <div className="absolute -top-6 -right-6 bg-card border border-border rounded-xl p-4 shadow-lg hidden lg:block">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                  <div className="text-sm font-medium">Live assessment</div>
                 </div>
               </div>
             </div>
@@ -170,141 +181,123 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-16 bg-muted/20">
+      {/* Social Proof */}
+      <section className="py-16 border-y border-border/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-12">
-            <h2 className="text-3xl font-heading font-bold mb-3">
-              {t("home.features_title")}
-            </h2>
-            <p className="text-muted-foreground">
-              {t("home.features_subtitle")}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Card 1 */}
-            <div className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors">
-              <Trophy className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-heading font-semibold mb-2">{t("features.competitions")}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {t("features.competitions_desc")}
-              </p>
+          <div className="grid grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-heading font-bold mb-2">2,847</div>
+              <div className="text-sm text-muted-foreground">Студентов улучшили профиль</div>
             </div>
-
-            {/* Card 2 */}
-            <div className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors">
-              <Award className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-heading font-semibold mb-2">{t("features.scholarships")}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {t("features.scholarships_desc")}
-              </p>
+            <div>
+              <div className="text-4xl font-heading font-bold mb-2">87%</div>
+              <div className="text-sm text-muted-foreground">Увеличили шансы на +20%</div>
             </div>
-
-            {/* Card 3 */}
-            <div className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors">
-              <Calendar className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-heading font-semibold mb-2">{t("features.summer_programs")}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {t("features.summer_programs_desc")}
-              </p>
-            </div>
-
-            {/* Card 4 */}
-            <div className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors">
-              <BookOpen className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-heading font-semibold mb-2">{t("features.async_courses")}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {t("features.async_courses_desc")}
-              </p>
-            </div>
-
-            {/* Card 5 */}
-            <div className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors">
-              <Target className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-heading font-semibold mb-2">{t("features.recommendations")}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {t("features.recommendations_desc")}
-              </p>
-            </div>
-
-            {/* Card 6 */}
-            <div className="bg-card border border-border/60 rounded-lg p-6 hover:border-primary/40 transition-colors">
-              <Users className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-heading font-semibold mb-2">{t("features.progress_tracking")}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {t("features.progress_tracking_desc")}
-              </p>
+            <div>
+              <div className="text-4xl font-heading font-bold mb-2">$2.4M</div>
+              <div className="text-sm text-muted-foreground">В стипендиях получено</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16">
+      {/* How it works */}
+      <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-primary/5 border border-primary/20 rounded-lg p-8 md:p-12 text-center">
-            <h2 className="text-2xl md:text-3xl font-heading font-bold mb-3">
-              {t("home.cta_title")}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-heading font-bold mb-4">
+              Как это работает
             </h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              {t("home.cta_subtitle")}
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              От оценки до поступления за 3 шага
             </p>
-            <Link href="/register">
-              <Button
-                size="lg"
-                className="bg-primary hover:bg-primary/90 text-white"
-                onClick={(e) => {
-                  if (!user) {
-                    e.preventDefault();
-                    setShowAuthModal(true);
-                  }
-                }}
-              >
-                {t("home.cta_button")}
-              </Button>
-            </Link>
           </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="relative">
+              <div className="bg-card border border-border rounded-xl p-8 h-full">
+                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+                  <Target className="w-6 h-6 text-primary" />
+                </div>
+                <div className="text-sm font-medium text-primary mb-2">Шаг 1</div>
+                <h3 className="text-xl font-heading font-bold mb-3">
+                  Оцени свой профиль
+                </h3>
+                <p className="text-muted-foreground">
+                  AI анализирует твои оценки, SAT/ACT, внеклассные активности и генерирует score 0-100
+                </p>
+              </div>
+              <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-border" />
+            </div>
+
+            <div className="relative">
+              <div className="bg-card border border-border rounded-xl p-8 h-full">
+                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+                  <TrendingUp className="w-6 h-6 text-primary" />
+                </div>
+                <div className="text-sm font-medium text-primary mb-2">Шаг 2</div>
+                <h3 className="text-xl font-heading font-bold mb-3">
+                  Получи roadmap
+                </h3>
+                <p className="text-muted-foreground">
+                  Персонализированный план: что улучшить, какие курсы взять, какие awards получить
+                </p>
+              </div>
+              <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-border" />
+            </div>
+
+            <div>
+              <div className="bg-card border border-border rounded-xl p-8 h-full">
+                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+                  <GraduationCap className="w-6 h-6 text-primary" />
+                </div>
+                <div className="text-sm font-medium text-primary mb-2">Шаг 3</div>
+                <h3 className="text-xl font-heading font-bold mb-3">
+                  Подай заявки
+                </h3>
+                <p className="text-muted-foreground">
+                  Используй наш college list builder и трекер дедлайнов для организованной подачи
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-24 bg-gradient-to-b from-transparent to-primary/5">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">
+            Начни прямо сейчас
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8">
+            2,847 студентов уже улучшили свои шансы. Ты следующий?
+          </p>
+          <Button
+            size="lg"
+            className="h-14 px-8 text-lg"
+            onClick={handleGetFullAnalysis}
+          >
+            Оценить профиль бесплатно
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Button>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-border/40 py-12 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-                  <GraduationCap className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-lg font-heading font-bold">Mentoria Hub</span>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-white" />
               </div>
-              <p className="text-sm text-muted-foreground max-w-sm">
-                {t("footer.description")}
-              </p>
+              <span className="text-lg font-heading font-bold">Applyze</span>
             </div>
 
-            <div>
-              <h3 className="font-semibold mb-4">Платформа</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="#" className="hover:text-foreground transition-colors">Возможности</Link></li>
-                <li><Link href="#" className="hover:text-foreground transition-colors">Курсы</Link></li>
-                <li><Link href="#" className="hover:text-foreground transition-colors">Лидерборд</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">О нас</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="#" className="hover:text-foreground transition-colors">О Mentoria</Link></li>
-                <li><Link href="#" className="hover:text-foreground transition-colors">Контакты</Link></li>
-                <li><Link href="#" className="hover:text-foreground transition-colors">Поддержка</Link></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-border/40 mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>© 2026 Mentoria Hub. Все права защищены.</p>
+            <p className="text-sm text-muted-foreground">
+              © 2026 Applyze. Know your chances before you apply.
+            </p>
           </div>
         </div>
       </footer>

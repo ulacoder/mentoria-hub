@@ -21,7 +21,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
     email: "",
     password: "",
     grade: "9 класс",
-    role: "student" as "student" | "mentor" | "admin",
+    role: "student" as "student",
     interests: [] as string[],
   });
   const [error, setError] = useState("");
@@ -66,7 +66,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
         setError("Неверный email или пароль");
       }
     } else {
-      if (formData.role === "student" && formData.interests.length === 0) {
+      if (formData.interests.length === 0) {
         setError("Выберите хотя бы один интерес");
         return;
       }
@@ -80,14 +80,7 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
       );
       if (success) {
         onClose();
-        // Redirect students to profile setup
-        if (formData.role === "student") {
-          setTimeout(() => router.push("/profile/setup"), 100);
-        } else if (redirectTo) {
-          setTimeout(() => router.push(redirectTo), 100);
-        } else {
-          setTimeout(() => router.push("/dashboard"), 100);
-        }
+        setTimeout(() => router.push("/profile/setup"), 100);
       } else {
         setError("Пользователь с таким email уже существует");
       }
@@ -140,88 +133,39 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Роль</label>
-                <div className="grid grid-cols-3 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, role: "student" })}
-                    className={`p-3 rounded-lg border-2 transition-all ${
-                      formData.role === "student"
-                        ? "border-primary bg-primary/10"
-                        : "border-border/60 hover:border-primary/40"
-                    }`}
-                  >
-                    <div className="text-2xl mb-1">🎓</div>
-                    <div className="text-xs font-medium">Студент</div>
-                    <div className="text-[10px] text-muted-foreground mt-1">Учусь и развиваюсь</div>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, role: "mentor" })}
-                    className={`p-3 rounded-lg border-2 transition-all ${
-                      formData.role === "mentor"
-                        ? "border-primary bg-primary/10"
-                        : "border-border/60 hover:border-primary/40"
-                    }`}
-                  >
-                    <div className="text-2xl mb-1">👨‍🏫</div>
-                    <div className="text-xs font-medium">Ментор</div>
-                    <div className="text-[10px] text-muted-foreground mt-1">Помогаю студентам</div>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, role: "admin" })}
-                    className={`p-3 rounded-lg border-2 transition-all ${
-                      formData.role === "admin"
-                        ? "border-primary bg-primary/10"
-                        : "border-border/60 hover:border-primary/40"
-                    }`}
-                  >
-                    <div className="text-2xl mb-1">⚙️</div>
-                    <div className="text-xs font-medium">Админ</div>
-                    <div className="text-[10px] text-muted-foreground mt-1">Управляю платформой</div>
-                  </button>
-                </div>
+                <label className="block text-sm font-medium mb-2">Класс</label>
+                <select
+                  value={formData.grade}
+                  onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
+                  className="w-full px-4 py-2 bg-background border border-border/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  <option>8 класс</option>
+                  <option>9 класс</option>
+                  <option>10 класс</option>
+                  <option>11 класс</option>
+                  <option>12 класс</option>
+                </select>
               </div>
 
-              {formData.role === "student" && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Класс</label>
-                    <select
-                      value={formData.grade}
-                      onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
-                      className="w-full px-4 py-2 bg-background border border-border/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              <div>
+                <label className="block text-sm font-medium mb-2">Интересы (выберите минимум 1)</label>
+                <div className="flex flex-wrap gap-2">
+                  {interestOptions.map((interest) => (
+                    <button
+                      key={interest}
+                      type="button"
+                      onClick={() => toggleInterest(interest)}
+                      className={`px-3 py-1 rounded-full text-sm transition-all ${
+                        formData.interests.includes(interest)
+                          ? "bg-primary text-white"
+                          : "bg-muted hover:bg-muted/80"
+                      }`}
                     >
-                      <option>8 класс</option>
-                      <option>9 класс</option>
-                      <option>10 класс</option>
-                      <option>11 класс</option>
-                      <option>12 класс</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Интересы (выберите минимум 1)</label>
-                    <div className="flex flex-wrap gap-2">
-                      {interestOptions.map((interest) => (
-                        <button
-                          key={interest}
-                          type="button"
-                          onClick={() => toggleInterest(interest)}
-                          className={`px-3 py-1 rounded-full text-sm transition-all ${
-                            formData.interests.includes(interest)
-                              ? "bg-primary text-white"
-                              : "bg-muted hover:bg-muted/80"
-                          }`}
-                        >
-                          {interest}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
+                      {interest}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </>
           )}
 
@@ -291,61 +235,6 @@ export function AuthModal({ isOpen, onClose, redirectTo }: AuthModalProps) {
               </p>
             )}
           </div>
-
-          {mode === "login" && (
-            <>
-              <div className="mt-4 p-4 bg-muted/50 rounded-lg border border-border/40 text-sm space-y-3">
-                <h3 className="font-semibold text-center mb-2">📋 Тестовые аккаунты</h3>
-
-                <div className="space-y-2">
-                  <div className="bg-background/80 p-3 rounded-md">
-                    <div className="font-medium text-primary mb-1">👨‍🏫 Ментор</div>
-                    <div className="text-xs text-muted-foreground space-y-0.5">
-                      <div>Email: <span className="font-mono text-foreground">mentor@mentoria.kz</span></div>
-                      <div>Пароль: <span className="font-mono text-foreground">mentor123</span></div>
-                    </div>
-                  </div>
-
-                  <div className="bg-background/80 p-3 rounded-md">
-                    <div className="font-medium text-primary mb-1">⚙️ Администратор</div>
-                    <div className="text-xs text-muted-foreground space-y-0.5">
-                      <div>Email: <span className="font-mono text-foreground">admin@mentoria.kz</span></div>
-                      <div>Пароль: <span className="font-mono text-foreground">admin123</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-4 p-4 bg-blue-500/10 rounded-lg border border-blue-500/30 text-sm">
-                <div className="flex gap-2 items-start">
-                  <div className="text-lg">💡</div>
-                  <div>
-                    <div className="font-semibold text-blue-600 dark:text-blue-400 mb-1">Для студентов</div>
-                    <div className="text-xs text-muted-foreground">
-                      Аккаунт ученика создается самостоятельно через регистрацию. Это необходимо
-                      для определения твоего типа личности и интересов, чтобы наша AI-система
-                      подобрала идеального ментора именно для тебя!
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-
-          {mode === "register" && formData.role === "student" && (
-            <div className="mt-4 p-4 bg-blue-500/10 rounded-lg border border-blue-500/30 text-sm">
-              <div className="flex gap-2 items-start">
-                <div className="text-lg">💡</div>
-                <div>
-                  <div className="font-semibold text-blue-600 dark:text-blue-400 mb-1">Для студентов</div>
-                  <div className="text-xs text-muted-foreground">
-                    Создавайте аккаунт самостоятельно, чтобы указать свои интересы и пройти тест на тип личности.
-                    Это поможет платформе подобрать для вас персонализированные курсы и менторов!
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </form>
         </div>
       </div>

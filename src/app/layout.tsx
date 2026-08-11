@@ -25,8 +25,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Mentoria Hub - Educational Opportunities Platform",
-  description: "Find competitions, scholarships, programs and take async courses. Platform for 8-12 grade students.",
+  title: "Applyze - Know Your Chances Before You Apply",
+  description: "AI-powered profile assessment for college admissions. Get your admission chances scored and personalized roadmap to top universities.",
 };
 
 export default function RootLayout({
